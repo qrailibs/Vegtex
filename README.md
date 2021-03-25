@@ -1,2 +1,4 @@
-# Vegtex
-HTML Framework for easier and faster development of beautiful websites.
+# About
+Vegtex - HTML Framework for easier and faster development of beautiful websites.
+
+**WIP**
