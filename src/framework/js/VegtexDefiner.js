@@ -1,6 +1,6 @@
 import VegtexComponent from './VegtexComponent'
 
-export const VegtexDefiner = {
+export default VegtexDefiner = {
     // Custom tags...
     components: {},
     defineComponent: function(component) {
@@ -79,7 +79,7 @@ export const VegtexDefiner = {
         this.components[component.tag] = component
 
         //call tag initialization event
-        if(component.events['__init__'] !== undefined) component.events['__init__'](this)
+        if(component.events['__register__'] !== undefined) component.events['__register__'](this)
     },
     isComponentDefined: function(tag) {
         return this.components[tag] !== undefined

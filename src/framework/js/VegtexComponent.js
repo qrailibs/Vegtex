@@ -1,4 +1,4 @@
-class VegtexComponent {
+export default class VegtexComponent {
     constructor(tag, attributes = {}, events = {}, style = {}, template = ``) {
         //HTML tag of component
         this.tag = tag
@@ -12,11 +12,11 @@ class VegtexComponent {
         this.template = template
 
         //generate CSS for component
-        this.css = Object.keys(component.style).map(function(prop) {
-            return `${prop}: ${component.style[prop]};`
-        }).join('')
+        //this.css = Object.keys(component.style).map(function(prop) {
+        //    return `${prop}: ${component.style[prop]};`
+        //}).join('')
         //display as block (if 'display' value isn't set)
-        this.css += this.css.includes('display:') ? '' : 'display: block;'
+        //this.css += this.css.includes('display:') ? '' : 'display: block;'
     }
 
     //define HTML attribute for component
@@ -51,11 +51,25 @@ class VegtexComponent {
                 instance.addEventListener(event_name, function(e) { event_func(e.target) } )
             }
         }
+
+        //call init event
+        if(this.events['__init__'] !== undefined) this.events['__init__'](instance)
     }
 
     //render instance of component
     __renderInstance__(instance) {
-        if(this.template != '') {
+        //JS rendering
+        if(this.events['__render__'] !== undefined) {
+            //get rendered
+            var rendered = this.events['__render__'](instance)
+
+            //render into DOM
+            if(rendered !== undefined && rendered != null)
+                instance.innerHTML = rendered
+        }
+
+        //HTML templating
+        else if(this.template !== undefined && this.template != '') {
             //assign {inner}
             var template = this.template.replaceAll('{inner}', instance.initialInner)
             

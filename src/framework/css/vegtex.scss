@@ -9,8 +9,11 @@ $border-radius: 15px;
     './core.scss',
     './styling.scss',
 
-    //components
+    //core components
     './text.scss',
     './form.scss', 
     './button.scss',
-    './card.scss'
+    './card.scss',
+
+    //vegex components
+    './component.scss'
