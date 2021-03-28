@@ -1,0 +1,16 @@
+
+
+//borders
+$border-width: 1px;
+$border-radius: 15px;
+
+@import 
+    //main
+    './core.scss',
+    './styling.scss',
+
+    //components
+    './text.scss',
+    './form.scss', 
+    './button.scss',
+    './card.scss'
