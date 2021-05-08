@@ -1,9 +1,9 @@
 //CSS Framework
-import '../css/vegtex.scss'
+import '../css/main.scss'
 
 //js
-const VegtexComponent = require('./VegtexComponent')
-const VegtexDefiner = require('./VegtexDefiner')
+import VegtexComponent from './VegtexComponent.js'
+import VegtexDefiner from './VegtexDefiner.js'
 
 VegtexDefiner.defineComponent(
     new VegtexComponent('sidebar',{},{},{color:'red'}, '{inner} :)')

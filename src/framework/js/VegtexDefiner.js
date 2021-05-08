@@ -9,7 +9,7 @@ export default VegtexDefiner = {
             throw new Error('You should specify what component to define via "VegtexComponent" class instance')
 
         window.customElements.define(component.tag.toLowerCase(), 
-            class CwmlTag extends HTMLElement { 
+            class Tag extends HTMLElement { 
                 constructor() {
                     //init
                     super()

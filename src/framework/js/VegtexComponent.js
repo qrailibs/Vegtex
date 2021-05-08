@@ -71,12 +71,12 @@ export default class VegtexComponent {
         //HTML templating
         else if(this.template !== undefined && this.template != '') {
             //assign {inner}
-            var template = this.template.replaceAll('{inner}', instance.initialInner)
+            var template = this.template.replaceAll('@{inner}', instance.initialInner)
             
             //assign variables values
             if(instance.hasAttributes()) {
                 for(var attr in this.attributes) {
-                    template = template.replaceAll('{'+this.attributes[attr].name+'}', this.attributes[attr].textContent)
+                    template = template.replaceAll('@{'+this.attributes[attr].name+'}', this.attributes[attr].textContent)
                 }
             }
 
