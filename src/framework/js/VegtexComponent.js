@@ -1,15 +1,40 @@
+import VegtexStyle from "./VegtexStyle"
+
 export default class VegtexComponent {
-    constructor(tag, attributes = {}, events = {}, style = {}, template = ``) {
+    /**
+     * Callback for observing attribute
+     * @name attrCallback
+     * @function
+     * @param {Object} element
+     * @param {string} oldAttrValue
+     * @param {string} newAttrValue
+     */
+    /**
+     * Callback for event
+     * @name eventCallback
+     * @function
+     * @param {Object} element
+     * @param {Object} event
+     */
+
+
+
+    /**
+     * Represents a vegtex component (tag in HTML)
+     * @constructor
+     * @param {string} tag - Tag that will represent this component in HTML
+     */
+    constructor(tag) {
         //HTML tag of component
         this.tag = tag
         //HTML attributes of component
-        this.attributes = attributes
+        this.attributes = {}
         //HTML & Custom events on component
-        this.events = events
+        this.events = {}
         //CSS style of component
-        this.style = style
+        this.style = new VegtexStyle()
         //Template of component
-        this.template = template
+        this.template = ``
 
         //generate CSS for component
         //this.css = Object.keys(component.style).map(function(prop) {
@@ -19,28 +44,55 @@ export default class VegtexComponent {
         //this.css += this.css.includes('display:') ? '' : 'display: block;'
     }
 
-    //define HTML attribute for component
+
+
+    /**
+     * Define component attribute that will be observed
+     * @param {string} attribute - Attribute name
+     * @param {attrCallback} onChange - when attribute value of any component instance was changed
+     */
     defineAttribute(attribute, onChange) {
         this.attributes[attribute] = onChange
     }
 
-    //add global event listener for all instances of component
+
+
+    /**
+     * Available built-in component events
+     * @enum {string}
+     */
+    static get vegtextEvent() {
+        return {
+            preRender: '__prerender__',
+            postRender: '__postrender__',
+            added: '__added__',
+            removed: '__removed__',
+            adopted: '__adopted__',
+            defined: '__defined__',
+        }
+    }
+    /**
+     * Add global event listener for all instances of component
+     * @param {vegtextEvent|string} event - DOM event name
+     * @param {eventCallback} callback - The author of the book.
+     */
     addEventListener(event, callback) {
         this.events[event] = callback
     }
 
-    //add CSS style property to component
-    addStyleProperty(styleProperty, value) {
-        this.style[styleProperty] = value
-    }
 
-    //initialize instane of component
+
+    /**
+     * Initialize instance of component
+     * @private
+     * @param {Object} instance - DOM element instance to initialize
+     */
     __initInstance__(instance) {
         //apply styling
-        for(var cssprop_name in this.style) {
-            var cssprop_value = this.style[cssprop_name]
-            instance.style[cssprop_name] = cssprop_value
-        }
+        //for(var cssprop_name in this.style) {
+        //    var cssprop_value = this.style[cssprop_name]
+        //    instance.style[cssprop_name] = cssprop_value
+        //}
 
         //observe events
         for(var event_name in this.events) {
@@ -56,32 +108,48 @@ export default class VegtexComponent {
         if(this.events['__init__'] !== undefined) this.events['__init__'](instance)
     }
 
-    //render instance of component
+    /**
+     * Render instance of component
+     * @private
+     * @param {Object} instance - DOM element instance to render
+     */
     __renderInstance__(instance) {
-        //JS rendering
-        if(this.events['__render__'] !== undefined) {
-            //get rendered
-            var rendered = this.events['__render__'](instance)
+        //prerender event
+        if(this.events['__prerender__'] !== undefined)
+            this.events['__prerender__'](instance)
 
-            //render into DOM
-            if(rendered !== undefined && rendered != null)
-                instance.innerHTML = rendered
-        }
+        //templating (JS)
+        if(this.template !== undefined && this.template != '') {
+            //context with variables
+            var context = {}
 
-        //HTML templating
-        else if(this.template !== undefined && this.template != '') {
-            //assign {inner}
-            var template = this.template.replaceAll('@{inner}', instance.initialInner)
-            
-            //assign variables values
+            //----- variables -----
+            //options
+            context.inside = false
+            //component
+            context.component = this
+            //inner
+            context.inner = instance.initialInner
+            context.outer = instance.initialOuter
+            //attributes
             if(instance.hasAttributes()) {
                 for(var attr in this.attributes) {
-                    template = template.replaceAll('@{'+this.attributes[attr].name+'}', this.attributes[attr].textContent)
+                    context[this.attributes[attr].name] = this.attributes[attr].textContent
                 }
             }
 
             //update DOM
-            instance.innerHTML = template
+            var rendered = this.template.call(context)
+            //render as child of component
+            if(context.inside)
+                instance.innerHTML = rendered
+            //render as replacement
+            else
+                instance.outerHTML = rendered
         }
+
+        //postrender event
+        if(this.events['__postrender__'] !== undefined)
+            this.events['__postrender__'](instance)
     }
 }

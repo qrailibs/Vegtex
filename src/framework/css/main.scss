@@ -37,7 +37,7 @@ body[spa] {
 //------------------------
 // (SPA) SIDEBAR
 //------------------------
-body[spa] sidebar {
+body[spa] vg-sidebar {
     max-height: 100vh;
 
     z-index: 1;
@@ -62,7 +62,7 @@ body[spa] sidebar {
 
         padding: 10px;
 
-        item {
+        vg-item {
             
         }
     }
@@ -72,7 +72,7 @@ body[spa] sidebar {
 
         padding: 1rem;
 
-        item {
+        vg-item {
             
         }
     }
@@ -82,7 +82,7 @@ body[spa] sidebar {
 
         padding: 2rem;
 
-        item {
+        vg-item {
             
         }
     }
