@@ -16,6 +16,13 @@ export default class VegtexComponent {
      * @param {Object} element
      * @param {Object} event
      */
+    /**
+     * Callback for method
+     * @name methodCallback
+     * @function
+     * @param {Object} element
+     * @param {...Object} args
+     */
 
 
 
@@ -27,12 +34,19 @@ export default class VegtexComponent {
     constructor(tag) {
         //HTML tag of component
         this.tag = tag
+
         //HTML attributes of component
         this.attributes = {}
+
         //HTML & Custom events on component
         this.events = {}
+
         //CSS style of component
         this.style = new VegtexStyle()
+
+        //JS Methods
+        this.methods = {}
+
         //Template of component
         this.template = ``
 
@@ -80,6 +94,16 @@ export default class VegtexComponent {
         this.events[event] = callback
     }
 
+
+
+    /**
+     * Define component method
+     * @param {string} name - Method name
+     * @param {methodCallback} method - Function that will be called
+     */
+    defineMethod(name, method) {
+        this.methods[name] = method
+    }
 
 
     /**
