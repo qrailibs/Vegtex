@@ -39,4 +39,50 @@ Example SPA page with Vegtex:
 ## 2. Custom Components
 Vegtex allows you to define your own components to HTML.
 
-**WIP**
+Example:
+```js
+import { vegtex, VegtexComponent } from 'vegtex'
+
+var myComponent = new VegtexComponent('my-component')
+myComponent.template = function() {
+   // template will be rendered inside tag
+   this.inside = true
+
+   return `
+      <h1>This is my component!</h1>
+      <!-- Initial content inside tag-->
+      <p>${this.inner}</p>
+   `
+} 
+```
+```html
+<html>
+    <head>
+        <title>Vegtex Single-Page Application</title>
+    </head>
+    <body>
+        <my-component>
+            Hello :) 
+        </my-component>
+        
+        <script src="./js/index.js"></script>
+    </body>
+</html>
+```
+When page is loaded and Vegtex rendering will be finished, page will look like this:
+```html
+<html>
+    <head>
+        <title>Vegtex Single-Page Application</title>
+    </head>
+    <body>
+        <my-component>
+            <h1>This is my component!</h1>
+            <!-- Initial content inside tag-->
+            <p>Hello :)</p>
+        </my-component>
+        
+        <script src="./js/index.js"></script>
+    </body>
+</html>
+```
