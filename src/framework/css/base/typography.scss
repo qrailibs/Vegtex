@@ -1,0 +1,75 @@
+//------------------------
+// TYPOGRAPHY
+//------------------------
+h1, .h1 {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 60px;
+
+    margin-bottom: 24px;
+
+    color: $color-1;
+}
+h2, .h2 {
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 48px;
+    
+    margin-bottom: 20px;
+
+    color: $color-1;
+}
+h3, .h3 {
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 42px;
+    
+    margin-bottom: 16px;
+
+    color: $color-1;
+}
+h4, .h4 {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 42px;
+    
+    margin-bottom: 16px;
+
+    color: $color-1;
+}
+h5, .h5 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 38px;
+    
+    margin-bottom: 14px;
+
+    color: $color-1;
+}
+h6, .h6 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 34px;
+    
+    margin-bottom: 12px;
+
+    color: $color-1;
+}
+.h7 {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 32px;
+    
+    margin-bottom: 12px;
+
+    color: $color-1;
+}
+
+p, .text {
+    font-weight: normal;
+    font-size: 16px;
+
+    margin-bottom: 4px;
+
+    color: $color-3;
+}

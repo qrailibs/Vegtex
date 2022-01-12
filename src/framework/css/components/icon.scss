@@ -1,0 +1,68 @@
+//------------------------
+// ICON
+//------------------------
+vg-icon, .vg-icon {
+    border-radius: $border-radius;
+    
+    width: 44px;
+    height: 44px;
+    background-color: $color-accent;
+
+    @extend .color-accent-text;
+
+    i {
+        @extend .fill;
+
+        color: $color-1;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            width: 26px;
+            height: 26px;
+        }
+    }
+    
+    // Size
+    &[size-lg] {
+        width: 44px;
+        height: 44px;
+
+        padding: 12px;
+
+        i {
+            svg {
+                width: 22px;
+                height: 22px;
+            }
+        }
+    }
+    &[size-md] {
+        width: 36px;
+        height: 36px;
+
+        padding: 12px 16px;
+    }
+    &[size-sm] {
+        width: 32px;
+        height: 32px;
+
+        padding: 10px;
+    }
+
+    // Styles
+    &[style-round] {
+        border-radius: 50%;
+    }
+}
+
+vg-icon-stack, .vg-icon-stack {
+    display: flex;
+    flex-direction: row;
+
+    vg-icon:not(:first-child), .vg-icon:not(:first-child) {
+        margin-left: -15px;
+    }
+}

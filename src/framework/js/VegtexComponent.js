@@ -2,6 +2,24 @@ import VegtexStyle from "./VegtexStyle"
 
 export default class VegtexComponent {
     /**
+     * Create multiple components
+     * @param {Array.<string>} tags - components names
+     */
+    static createMultiple(tags) {
+        if(tags && Array.isArray(tags)) {
+            let components = []
+
+            tags.forEach(tag => {
+                components.push(new VegtexComponent(tag))
+            })
+
+            return components
+        }
+        else
+            throw new Error('Components tags was not passed')
+    }
+
+    /**
      * Callback for observing attribute
      * @name attrCallback
      * @function
@@ -25,37 +43,43 @@ export default class VegtexComponent {
      */
 
 
+    /**
+     * Available rendering ways
+     * @enum {string}
+     */
+    static get renderWays() {
+        return {
+            dom: 'dom',
+            shadowDom: 'shadow'
+        }
+    }
 
     /**
      * Represents a vegtex component (tag in HTML)
      * @constructor
      * @param {string} tag - Tag that will represent this component in HTML
      */
-    constructor(tag) {
+    constructor(tag, data) {
         //HTML tag of component
         this.tag = tag
 
         //HTML attributes of component
-        this.attributes = {}
+        this.attributes = data?.attributes || {}
 
         //HTML & Custom events on component
-        this.events = {}
+        this.events = data?.events || {}
 
         //CSS style of component
-        this.style = new VegtexStyle()
+        this.style = data?.style ? new VegtexStyle(data.style) : null
 
         //JS Methods
-        this.methods = {}
+        this.methods = data?.methods || {}
 
         //Template of component
-        this.template = ``
+        this.template = data?.template || ``
 
-        //generate CSS for component
-        //this.css = Object.keys(component.style).map(function(prop) {
-        //    return `${prop}: ${component.style[prop]};`
-        //}).join('')
-        //display as block (if 'display' value isn't set)
-        //this.css += this.css.includes('display:') ? '' : 'display: block;'
+        //Render way
+        this.renderWay = data?.renderWay || 'dom'
     }
 
 
@@ -75,26 +99,54 @@ export default class VegtexComponent {
      * Available built-in component events
      * @enum {string}
      */
-    static get vegtextEvent() {
+    static get events() {
         return {
             preRender: '__prerender__',
             postRender: '__postrender__',
+
             added: '__added__',
             removed: '__removed__',
             adopted: '__adopted__',
-            defined: '__defined__',
+
+            defined: '__defined__'
         }
     }
+
     /**
      * Add global event listener for all instances of component
      * @param {vegtextEvent|string} event - DOM event name
-     * @param {eventCallback} callback - The author of the book.
      */
     addEventListener(event, callback) {
         this.events[event] = callback
     }
 
 
+    /**
+     * Attach shadow to connected instance
+     * @param {Object} instance - DOM element instance
+     */
+    __attachShadow__(instance) {
+        const shadowMode = 'closed'
+
+        //use shadow dom only if required (for style or rendering)
+        if(this.style || this.renderWay === 'shadow')
+            instance.shadow = instance.attachShadow({mode: shadowMode})
+    }
+    /**
+     * Render html into 
+     * @param {Object} instance - DOM element instance
+     */
+    __renderShadow__(instance, html) {
+        //create template
+        let templateEl = document.createElement('template')
+        templateEl.innerHTML = html
+
+        //clear normal dom
+        instance.innerHTML = ''
+
+        //render template to shadow dom
+        instance.shadow.appendChild(templateEl)
+    }
 
     /**
      * Define component method
@@ -104,7 +156,6 @@ export default class VegtexComponent {
     defineMethod(name, method) {
         this.methods[name] = method
     }
-
 
     /**
      * Initialize instance of component
@@ -124,7 +175,7 @@ export default class VegtexComponent {
 
             //if its default event (not nondefault like '__adopted__', etc)
             if(!event_name.startsWith('__')) {
-                instance.addEventListener(event_name, function(e) { event_func(e.target) } )
+                instance.addEventListener(event_name, function(e) { event_func(instance, e) } )
             }
         }
 
@@ -141,20 +192,20 @@ export default class VegtexComponent {
         //prerender event
         if(this.events['__prerender__'] !== undefined)
             this.events['__prerender__'](instance)
-
+        
         //templating (JS)
         if(this.template !== undefined && this.template != '') {
             //context with variables
-            var context = {}
+            var context = {
+                inside: false,
 
-            //----- variables -----
-            //options
-            context.inside = false
-            //component
+                component: undefined,
+
+                inner: instance.initialInner,
+                outer: instance.initialOuter
+            }
             context.component = this
-            //inner
-            context.inner = instance.initialInner
-            context.outer = instance.initialOuter
+
             //attributes
             if(instance.hasAttributes()) {
                 for(var attr in this.attributes) {
@@ -162,14 +213,41 @@ export default class VegtexComponent {
                 }
             }
 
-            //update DOM
+            //render with template
             var rendered = this.template.call(context)
-            //render as child of component
-            if(context.inside)
-                instance.innerHTML = rendered
-            //render as replacement
-            else
-                instance.outerHTML = rendered
+
+            //basic DOM
+            if(this.renderWay == 'dom') {
+                //render as child of component
+                if(context.inside)
+                    instance.innerHTML = rendered
+                //render as replacement
+                else
+                    instance.outerHTML = rendered
+            }
+            //shadow DOM
+            else if(this.renderWay == 'shadow') {
+                //render as child of component
+                if(context.inside)
+                    this.__renderShadow__(instance, `
+                        ${this.style ? `<style>${this.style.css}</style>` : ''}
+                        ${instance.initialInner}
+                    `)
+                //render as replacement -> error
+                else
+                    throw new Error('Only rendering inside component allowed (due to shadow dom rendering)')
+            }
+            //unknown way
+            else {
+                throw new Error(`Invalid render way: '${this.renderWay}' (Expected 'dom' or 'shadow')`)
+            }
+        }
+        //shadow rendering initial
+        else if(this.renderWay == 'shadow') {
+            this.__renderShadow__(instance, `
+                ${this.style ? `<style>${this.style.css}</style>` : ''}
+                ${instance.initialInner}
+            `)
         }
 
         //postrender event

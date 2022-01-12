@@ -1,0 +1,44 @@
+//------------------------
+// BADGE
+//------------------------
+vg-badge, .vg-badge {
+    border-radius: 50%;
+
+    width: max-content;
+    height: max-content;
+    
+    // Size
+    &[size-lg] {
+        padding: 6px 12px;
+
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+
+        &[type-icon] {
+            padding: 7px 8px;
+        }
+    }
+    &[size-md] {
+        padding: 2px 10px;
+
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+
+        &[type-icon] {
+            padding: 5px;
+        }
+    }
+    &[size-sm] {
+        padding: 0px 8px;
+
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 20px;
+
+        &[type-icon] {
+            padding: 4px;
+        }
+    }
+}

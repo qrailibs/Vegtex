@@ -1,23 +1,37 @@
 //CSS
-import '../css/main.scss'
+import '../css/all.scss'
+
 //JS
 import VegtexComponent from './VegtexComponent.js'
 import VegtexStyle from './VegtexStyle.js'
 
 const vegtex = {
+    use: function(scheme, schemeAccent) {
+        //validate scheme
+        if(!scheme || (scheme !== 'dark' && scheme !== 'light'))
+            throw new Error('You should specify valid scheme ("dark" or "light")')
+        //validate accent
+        if(!schemeAccent)
+            throw new Error('You should specify scheme accent')
+
+        //apply style scheme
+        document.body.className = `vg-app theme-${scheme} accent-${schemeAccent}`
+    },
+
     /** @type {Object} Registered vegtex components */
     components: {},
     defineComponent: function(component) {
         //verify that 'component' argument is set
-        if(component == undefined || !component instanceof VegtexComponent)
+        if(!component || !component instanceof VegtexComponent)
             throw new Error('You should specify what component to define via "VegtexComponent" class instance')
 
+        //define WebComponent
         window.customElements.define(component.tag.toLowerCase(), 
-            class Tag extends HTMLElement { 
+            class extends HTMLElement { 
                 constructor() {
                     //init
                     super()
-
+                    
                     this.component = component
 
                     //initial inner nad outer html of current dom element
@@ -27,23 +41,26 @@ const vegtex = {
                     //init
                     this.component.__initInstance__(this)
 
+                    //attach shadow dom
+                    this.component.__attachShadow__(this)
+                    
                     //render
                     this.component.__renderInstance__(this)
                 }
 
-                connectedCallback() { 
+                connectedCallback() {
                     //call event '__added__' (if handled)
-                    if(this.component.events['__added__'] !== undefined)
+                    if(this.component.events['__added__'])
                         this.component.events['__added__'](this)
                 }
                 disconnectedCallback() { 
                     //call event '__removed__' (if handled)
-                    if(this.component.events['__removed__'] !== undefined)
+                    if(this.component.events['__removed__'])
                         this.component.events['__removed__'](this)
                 }
                 adoptedCallback() { 
                     //call event '__adopted__' (if handled)
-                    if(this.component.events['__adopted__'] !== undefined)
+                    if(this.component.events['__adopted__'])
                         this.component.events['__adopted__'](this)
                 }
 
@@ -51,8 +68,12 @@ const vegtex = {
                     let observed = []
 
                     //without or with observers
-                    if(component.attributes.constructor == Array) { observed = component.attributes }
-                    else if(component.attributes.constructor == Object) { observed = Object.keys(component.attributes) }
+                    if(component.attributes.constructor == Array) { 
+                        observed = component.attributes 
+                    }
+                    else if(component.attributes.constructor == Object) { 
+                        observed = Object.keys(component.attributes) 
+                    }
                     
                     //observe dynamic attr
                     observed.push('dynamic')
@@ -79,13 +100,23 @@ const vegtex = {
         this.components[component.tag] = component
 
         //call tag initialization event
-        if(component.events['__defined__'] !== undefined) component.events['__defined__'](this)
+        if(component.events['__defined__']) 
+            component.events['__defined__'](this)
+    },
+    defineComponents: function(components) {
+        //verify that 'components' argument is set
+        if(components == undefined || !Array.isArray(components))
+            throw new Error('You should pass components as array')
+
+        components.forEach(component => {
+            vegtex.defineComponent(component)
+        })
     },
     isComponentDefined: function(tag) {
         return this.components[tag] !== undefined
     },
 
-    /** @type {Object} Registered vegtex components attributes */
+    /** @type {Object} Registered global observed attributes */
     attributes: {},
     defineAttribute: function(query, attr, callback = function(el, newVal) {}) {
         var targets = document.querySelectorAll(query);
@@ -180,17 +211,53 @@ const vegtex = {
     }
 }
 
-//sidebar
-var sidebar = new VegtexComponent('vg-sidebar')
-sidebar.methods = {
-    increase: function(val) {
-        console.log('increasing ' + val)
+let components = []
+//-----------
+// ICON
+//-----------
+let Icon = new VegtexComponent('vg-icon')
+let IconStack = new VegtexComponent('vg-icon-stack')
+components = components.concat([Icon, IconStack])
+
+//-----------
+// CARD
+//-----------
+let Card = new VegtexComponent('vg-card')
+components.push(Card)
+
+//-----------
+// PROGRESS
+//-----------
+let Progress = new VegtexComponent('vg-progress')
+components.push(Progress)
+
+//-----------
+// BADGE
+//-----------
+let Badge = new VegtexComponent('vg-badge')
+components.push(Badge)
+
+//-----------
+// SPA: SIDEBAR
+//-----------
+let Sidebar = new VegtexComponent('vg-sidebar')
+let SidebarItem = new VegtexComponent('vg-item', {
+    events: {
+        click: (instance, e) => {
+            let navigateTo = e.target.getAttribute('navigate')
+        
+            if(navigateTo) {
+                console.log(navigateTo)
+            }
+        }
     }
-}
-vegtex.defineComponent(sidebar)
-vegtex.$('vg-sidebar').each(el => {
-    el.increase(100)
 })
+components = components.concat([Sidebar, SidebarItem])
+
+//-----------
+// DEFINING
+//-----------
+vegtex.defineComponents(components)
 
 export {
     VegtexComponent,

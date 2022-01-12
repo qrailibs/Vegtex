@@ -20,9 +20,11 @@ export default class VegtexStyleRule {
     */
     get css() {
         var ruleCss = ''
+
         //add every rule
         Object.keys(rule.props).forEach(propName => {
             var propValue = rule.props[propName]
+
             ruleCss += `${propName}:${propValue};`
         })
 

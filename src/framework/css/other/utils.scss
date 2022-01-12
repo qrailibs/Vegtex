@@ -1,0 +1,13 @@
+.noselect {
+    user-select: none;
+}
+.nodrag {
+    pointer-events: none;
+
+    user-select: none;
+    user-drag: none;
+}
+.fill {
+    width: 100%;
+    height: 100%;
+}

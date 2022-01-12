@@ -1,0 +1,147 @@
+//------------------------
+// BUTTON
+//------------------------
+button, .vg-button {
+    @extend .noselect;
+    
+    width: min-content;
+
+    border-radius: $border-radius;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: $transition;
+
+    cursor: pointer;
+
+    // Sizes
+    &[size-lg] {
+        padding: 16px 24px;
+
+        font-weight: 500;
+        font-size: $text-size-button;
+
+        line-height: 16px;
+
+        &[type-icon] {
+            padding: 14px;
+        }
+    }
+    &[size-md] {
+        padding: 10px 20px;
+
+        font-weight: 500;
+        font-size: $text-size-button;
+
+        line-height: 16px;
+
+        &[type-icon] {
+            padding: 9px;
+        }
+    }
+    &[size-sm] {
+        padding: 6px 20px;
+        
+        font-weight: 500;
+        font-size: $text-size-minibutton;
+
+        line-height: 20px;
+
+        &[type-icon] {
+            padding: 7px;
+        }
+    }
+
+    // Styles
+    &[style-accent] {
+        background-color: $color-accent;
+        color: $color-accent-text;
+        border: none;
+
+        &:hover, &:focus {
+            background-color: $color-accent-hover;
+        }
+        &:disabled {
+            background-color: $color-accent;
+            opacity: 0.25;
+        }
+    }
+    &[style-light] {
+        background-color: $color-1;
+        color: $color-10;
+        border: none;
+
+        &:hover, &:focus {
+            background-color: $color-2;
+        }
+        &:disabled {
+            background-color: $color-1;
+            opacity: 0.25;
+        }
+    }
+    &[style-secondary] {
+        background-color: $color-9;
+        color: $color-1;
+        border: none;
+
+        &:hover, &:focus {
+            background-color: $color-8;
+        }
+        &:disabled {
+            background-color: $color-9;
+            opacity: 0.25;
+        }
+    }
+    &[style-ghost] {
+        background-color: transparent;
+        color: $color-1;
+        border: none;
+
+        &:hover, &:focus {
+            background-color: $color-10;
+        }
+        &:disabled {
+            background-color: transparent;
+            opacity: 0.25;
+        }
+    }
+    &[style-outline] {
+        background-color: transparent;
+        color: $color-1;
+        border: 2px solid $color-9;
+    
+        &:hover, &:focus {
+            border: 2px solid $color-7;
+        }
+
+        &:disabled {
+            border: none;
+            opacity: 0.25;
+        }
+    }
+    &[style-light-outline] {
+        background-color: transparent;
+        color: $color-1;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    
+        &:hover, &:focus {
+            border: 1px solid white;
+        }
+
+        &:disabled {
+            border: none;
+            opacity: 0.25;
+        }
+    }
+
+    // Disabled state
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+[rounded] {
+    border-radius: 50%;
+}

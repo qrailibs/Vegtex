@@ -6,7 +6,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
-    entry: { main: "./src/framework/js/vegtex.js" },
+    entry: { 
+        main: devMode ? "./src/test/index.js" : "./src/framework/js/vegtex.js" 
+    },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "vegtex.[chunkhash].js",
@@ -53,6 +55,5 @@ module.exports = {
             chunkFilename: '[id].css'
         }),
         new CleanWebpackPlugin(),
-    ],
-    watch: true
+    ]
 };

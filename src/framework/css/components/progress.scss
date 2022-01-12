@@ -1,0 +1,39 @@
+//------------------------
+// PROGRESS
+//------------------------
+vg-progress, .vg-progress {
+    width: 100%;
+    height: 6px;
+
+    display: flex;
+
+    border-radius: $border-radius;
+
+    background-color: $color-11;
+
+    span {
+        height: 100%;
+
+        border-radius: $border-radius;
+
+        background-color: $color-success;
+        box-shadow: $shadow-success;
+    }
+
+    &[style-accent] span {
+        background-color: $color-accent;
+        box-shadow: $shadow-accent;
+    }
+    &[style-success] span {
+        background-color: $color-success;
+        box-shadow: $shadow-success;
+    }
+    &[style-warning] span {
+        background-color: $color-warning;
+        box-shadow: $shadow-warning;
+    }
+    &[style-danger] span {
+        background-color: $color-danger;
+        box-shadow: $shadow-danger;
+    }
+}

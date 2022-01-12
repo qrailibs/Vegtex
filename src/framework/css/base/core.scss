@@ -1,0 +1,203 @@
+@use "sass:color";
+
+// FONT -----------
+$base-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$base-font-weight: normal;
+
+// THEME ----------
+$color-0: var(--color-0);
+$color-1: var(--color-1);
+$color-2: var(--color-2);
+$color-3: var(--color-3);
+$color-4: var(--color-4);
+$color-5: var(--color-5);
+$color-6: var(--color-6);
+$color-7: var(--color-7);
+$color-8: var(--color-8);
+$color-9: var(--color-9);
+$color-10: var(--color-10);
+$color-11: var(--color-11);
+
+$color-success: var(--color-success);
+$color-warning: var(--color-warning);
+$color-danger: var(--color-danger);
+
+$color-accent: var(--color-accent);
+$color-accent-hover: var(--color-accent-hover);
+$color-accent-semi: var(--color-accent-semi);
+
+$color-accent-text: var(--color-accent-text);
+$color-accent-muted: var(--color-accent-muted);
+
+$shadow-accent: var(--shadow-accent);
+
+// TEXT -----------
+$text-size-regular: 14px;
+$text-size-subtitle: 16px;
+$text-size-button: 16px;
+$text-size-minibutton: 14px;
+$text-size-description: 12px;
+$text-size-minidescription: 9px;
+
+// BORDER ---------
+$border-width: 2px;
+$border-radius: 6px;
+
+// SHADOW ---------
+$shadow-success: 0px 100px 80px rgba(29, 251, 97, 0.18), 0px 41.7776px 33.4221px rgba(29, 251, 97, 0.129394), 0px 22.3363px 17.869px rgba(29, 251, 97, 0.107299), 0px 12.5216px 10.0172px rgba(29, 251, 97, 0.09), 0px 6.6501px 5.32008px rgba(29, 251, 97, 0.0727007), 0px 2.76726px 2.21381px rgba(29, 251, 97, 0.0506062);
+$shadow-warning: 0px 73px 74px rgba(255, 162, 0, 0.63), 0px 26.6462px 27.0112px rgba(255, 162, 0, 0.434688), 0px 12.9362px 13.1134px rgba(255, 162, 0, 0.350463), 0px 6.34158px 6.42845px rgba(255, 162, 0, 0.279537), 0px 2.50747px 2.54182px rgba(255, 162, 0, 0.195312);
+$shadow-danger: 0px 100px 80px rgba(255, 19, 94, 0.34), 0px 41.7776px 33.4221px rgba(255, 19, 94, 0.24441), 0px 22.3363px 17.869px rgba(255, 19, 94, 0.202676), 0px 12.5216px 10.0172px rgba(255, 19, 94, 0.17), 0px 6.6501px 5.32008px rgba(255, 19, 94, 0.137324), 0px 2.76726px 2.21381px rgba(255, 19, 94, 0.0955895);
+
+// TRANSITION -----
+$transition: .3s ease-in-out;
+
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("/src/framework/font/inter/Inter-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+
+//------------------------
+// THEMING, COLORS
+//------------------------
+/* Default */
+.theme-dark {
+    --color-0: #FFFFFF;
+    --color-1: #F5F5FF;
+    --color-2: #D0D0DA;
+    --color-3: #A9A9B7;
+    --color-4: #8A8A98;
+    --color-5: #70707C;
+    --color-6: #5B5B65;
+    --color-7: #40404A;
+    --color-8: #2C2C35;
+    --color-9: #1E1E24;
+    --color-10: #0F0F13;
+    --color-11: #000000;
+
+    --color-success: #15FFAB;
+    --color-warning: #FF7A2F;
+    --color-danger: #FD4438;
+
+    color: var(--color-1);
+    background-color: var(--color-10);
+}
+.theme-light {
+    --color-0: #000000;
+    --color-1: #0F0F13;
+    --color-2: #1E1E24;
+    --color-3: #2C2C35;
+    --color-4: #40404A;
+    --color-5: #5B5B65;
+    --color-6: #70707C;
+    --color-7: #8A8A98;
+    --color-8: #A9A9B7;
+    --color-9: #D0D0DA;
+    --color-10: #F5F5FF;
+    --color-11: #FFFFFF;
+
+    --color-success: #15FFAB;
+    --color-warning: #FF7A2F;
+    --color-danger: #FD4438;
+
+    color: var(--color-1);
+    background-color: var(--color-10);
+}
+
+/* Default */
+.accent-azure {
+    --color-accent: rgb(0, 98, 255);
+    --color-accent-hover: rgb(25,113,255);
+    --color-accent-semi: rgb(0, 98, 255, .35);
+
+    --color-accent-text: rgb(255, 255, 255);
+    --color-accent-muted: rgb(255, 255, 255, .8);
+
+    --shadow-accent: 0px 100px 80px rgba(46, 249, 255, 0.19), 0px 42px 34px rgba(46, 249, 255, 0.136582), 0px 22px 18px rgba(46, 249, 255, 0.11326), 0px 12.5px 10px rgba(46, 249, 255, 0.095), 0px 7px 5px rgba(46, 249, 255, 0.0767396), 0px 3px 2px rgba(46, 249, 255, 0.0534177);
+}
+.accent-spring {
+    --color-accent: #62F783;
+
+    --shadow-accent: $shadow-success;
+}
+.accent-amethyst {
+    --color-accent: rgb(161, 98, 247);
+    --color-accent-hover: rgb(170,113,247);
+    --color-accent-semi: rgb(161, 98, 247, .35);
+
+    --color-accent-text: rgb(255, 255, 255);
+    --color-accent-muted: rgb(255, 255, 255, .8);
+
+    --shadow-accent: 0px 100px 80px rgb(105, 0, 255, 0.19), 0px 42px 34px rgba(105, 0, 255, 0.741675), 0px 22px 18px rgba(105, 0, 255, 0.626781), 0px 12.5px 10px rgba(105, 0, 255, 0.539948), 0px 7px 5px rgba(105, 0, 255, 0.460052), 0px 3px 2px rgba(105, 0, 255, 0.373219), 0px 5px 2px rgba(105, 0, 255, 0.258325);
+}
+.accent-toxicyellow {
+    --color-accent: #FFF736;
+}
+//------------------------
+// COMMON
+//------------------------
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+
+    border: 0px;
+
+    font: inherit;
+    color: inherit;
+
+    vertical-align: baseline;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+
+    overflow: hidden;
+    height: 100%;
+
+    font-family: $base-font;
+    font-style: normal;
+    font-weight: $base-font-weight;
+    font-size: $text-size-regular;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 100%;
+
+    background-color: $color-11;
+}
