@@ -37,7 +37,7 @@ import vegtex from 'vegtex'
 vegtex.use('light', 'azure')
 ```
 ## For MA (Mobile Application)
-*TODO*
+*Mobila components isn't done yet, but we are working to make them available!*
 
 # Documentation
-*TODO*
+[Russian Documentation](https://proxymal.ru/view/vegtex)
