@@ -36,8 +36,9 @@ import vegtex from 'vegtex'
 // vegtex.use(theme, themeAccent)
 vegtex.use('light', 'azure')
 ```
+
 ## For MA (Mobile Application)
-*Mobila components isn't done yet, but we are working to make them available!*
+*Mobile components isn't done yet, but we are working to make them available!*
 
 # Documentation
 [Russian Documentation](https://proxymal.ru/view/vegtex)
