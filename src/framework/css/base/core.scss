@@ -32,16 +32,16 @@ $color-accent-muted: var(--color-accent-muted);
 $shadow-accent: var(--shadow-accent);
 
 // TEXT -----------
-$text-size-regular: 14px;
-$text-size-subtitle: 16px;
-$text-size-button: 16px;
-$text-size-minibutton: 14px;
-$text-size-description: 12px;
-$text-size-minidescription: 9px;
+$text-size-regular: var(--text-size-regular);
+$text-size-subtitle: var(--text-size-subtitle);
+$text-size-button: var(--text-size-button);
+$text-size-minibutton: var(--text-size-minibutton);
+$text-size-description: var(--text-size-description);
+$text-size-minidescription: var(--text-size-minidescription);
 
 // BORDER ---------
-$border-width: 2px;
-$border-radius: 6px;
+$border-width: var(--border-width);
+$border-radius: var(--border-radius);
 
 // SHADOW ---------
 $shadow-success: 0px 100px 80px rgba(29, 251, 97, 0.18), 0px 41.7776px 33.4221px rgba(29, 251, 97, 0.129394), 0px 22.3363px 17.869px rgba(29, 251, 97, 0.107299), 0px 12.5216px 10.0172px rgba(29, 251, 97, 0.09), 0px 6.6501px 5.32008px rgba(29, 251, 97, 0.0727007), 0px 2.76726px 2.21381px rgba(29, 251, 97, 0.0506062);
@@ -91,6 +91,17 @@ $transition: .3s ease-in-out;
 //------------------------
 // THEMING, COLORS
 //------------------------
+:root {
+    --border-width: 2px;
+    --border-radius: 6px;
+
+    --text-size-regular: 14px;
+    --text-size-subtitle: 16px;
+    --text-size-button: 16px;
+    --text-size-minibutton: 14px;
+    --text-size-description: 12px;
+    --text-size-minidescription: 9px;
+}
 /* Default */
 .theme-dark {
     --color-0: #FFFFFF;

@@ -60,26 +60,29 @@ export default class VegtexComponent {
      * @param {string} tag - Tag that will represent this component in HTML
      */
     constructor(tag, data) {
-        //HTML tag of component
+        // HTML tag of component
         this.tag = tag
 
-        //HTML attributes of component
+        // HTML attributes of component
         this.attributes = data?.attributes || {}
 
-        //HTML & Custom events on component
+        // HTML & Custom events on component
         this.events = data?.events || {}
 
-        //CSS style of component
-        this.style = data?.style ? new VegtexStyle(data.style) : null
+        // CSS style of component
+        this.style = data?.style
 
-        //JS Methods
-        this.methods = data?.methods || {}
+        // Locals (Methods, Variables)
+        this.locals = data?.locals || {}
 
-        //Template of component
+        // Template of component
         this.template = data?.template || ``
 
-        //Render way
-        this.renderWay = data?.renderWay || 'dom'
+        // Render way
+        this.renderWay = data?.renderWay || VegtexComponent.renderWays.dom
+    
+        // Init in DOM
+        this.__initTag__()
     }
 
 
@@ -120,6 +123,127 @@ export default class VegtexComponent {
         this.events[event] = callback
     }
 
+    /**
+     * Define component local method or variable
+     * @param {string} name - name of the local
+     * @param {object} value - value of the local
+     */
+    defineLocal(name, value) {
+        this.locals[name] = value
+    }
+
+    /**
+     * Initialize HTML tag of component
+     * @private
+     */
+    __initTag__() {
+        const component = this;
+
+        //define WebComponent
+        window.customElements.define(component.tag.toLowerCase(), 
+            class VegtexElement extends HTMLElement { 
+                constructor() {
+                    //init
+                    super()
+                    
+                    this.component = component
+
+                    //initial inner nad outer html of current dom element
+                    this.initialInner = this.innerHTML
+                    this.initialOuter = this.outerHTML
+                    
+                    //init
+                    this.component.__initInstance__(this)
+
+                    //attach shadow dom
+                    this.component.__attachShadow__(this)
+                    
+                    //render
+                    this.component.__renderInstance__(this)
+
+                    //define locals (methods, properties)
+                    for(const localName of Object.keys(component.locals)) {
+                        this[localName] = component.locals[localName]
+                    }
+                }
+
+                connectedCallback() {
+                    //call event '__added__' (if handled)
+                    if(this.component.events['__added__'])
+                        this.component.events['__added__'](this)
+                }
+                disconnectedCallback() { 
+                    //call event '__removed__' (if handled)
+                    if(this.component.events['__removed__'])
+                        this.component.events['__removed__'](this)
+                }
+                adoptedCallback() { 
+                    //call event '__adopted__' (if handled)
+                    if(this.component.events['__adopted__'])
+                        this.component.events['__adopted__'](this)
+                }
+
+                static get observedAttributes() {
+                    let observed = []
+
+                    //without or with observers
+                    if(component.attributes.constructor == Array) { 
+                        observed = component.attributes 
+                    }
+                    else if(component.attributes.constructor == Object) { 
+                        observed = Object.keys(component.attributes) 
+                    }
+                    
+                    //observe dynamic attr
+                    observed.push('dynamic')
+
+                    return observed
+                }
+                attributeChangedCallback(attrName, oldVal, newVal) {
+                    //call attrs observers
+                    if(this.component.attributes.constructor == Object) {
+                        //call attribute change (if this attribute is observed)
+                        if(this.component.attributes[attrName] !== undefined)
+                            this.component.attributes[attrName](this, oldVal, newVal)
+                    }
+                    
+                    //render
+                    if(this.hasAttribute('dynamic') && this.attributes['dynamic'] != 'false') {
+                        this.component.__renderInstance__(this)
+                    }
+                }
+            }
+        )
+
+        //call tag initialization event
+        if(component.events['__defined__']) 
+            component.events['__defined__'](component)
+
+        //style
+        if(this.style) {
+            document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
+        }
+    }
+
+    /**
+     * Initialize instance of component
+     * @private
+     * @param {Object} instance - DOM element instance to initialize
+     */
+    __initInstance__(instance) {
+        //observe events
+        for(var event_name in this.events) {
+            var event_func = this.events[event_name]
+
+            //if its default event (not nondefault like '__adopted__', etc)
+            if(!event_name.startsWith('__')) {
+                instance.addEventListener(event_name, function(e) { event_func(instance, e) } )
+            }
+        }
+
+        //call init event
+        if(this.events['__init__'] !== undefined) this.events['__init__'](instance)
+    }
 
     /**
      * Attach shadow to connected instance
@@ -129,7 +253,7 @@ export default class VegtexComponent {
         const shadowMode = 'closed'
 
         //use shadow dom only if required (for style or rendering)
-        if(this.style || this.renderWay === 'shadow')
+        if(this.style || this.renderWay === VegtexComponent.renderWays.shadowDom)
             instance.shadow = instance.attachShadow({mode: shadowMode})
     }
     /**
@@ -147,42 +271,6 @@ export default class VegtexComponent {
         //render template to shadow dom
         instance.shadow.appendChild(templateEl)
     }
-
-    /**
-     * Define component method
-     * @param {string} name - Method name
-     * @param {methodCallback} method - Function that will be called
-     */
-    defineMethod(name, method) {
-        this.methods[name] = method
-    }
-
-    /**
-     * Initialize instance of component
-     * @private
-     * @param {Object} instance - DOM element instance to initialize
-     */
-    __initInstance__(instance) {
-        //apply styling
-        //for(var cssprop_name in this.style) {
-        //    var cssprop_value = this.style[cssprop_name]
-        //    instance.style[cssprop_name] = cssprop_value
-        //}
-
-        //observe events
-        for(var event_name in this.events) {
-            var event_func = this.events[event_name]
-
-            //if its default event (not nondefault like '__adopted__', etc)
-            if(!event_name.startsWith('__')) {
-                instance.addEventListener(event_name, function(e) { event_func(instance, e) } )
-            }
-        }
-
-        //call init event
-        if(this.events['__init__'] !== undefined) this.events['__init__'](instance)
-    }
-
     /**
      * Render instance of component
      * @private
@@ -217,7 +305,7 @@ export default class VegtexComponent {
             var rendered = this.template.call(context)
 
             //basic DOM
-            if(this.renderWay == 'dom') {
+            if(this.renderWay == VegtexComponent.renderWays.dom) {
                 //render as child of component
                 if(context.inside)
                     instance.innerHTML = rendered
@@ -226,7 +314,7 @@ export default class VegtexComponent {
                     instance.outerHTML = rendered
             }
             //shadow DOM
-            else if(this.renderWay == 'shadow') {
+            else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
                 //render as child of component
                 if(context.inside)
                     this.__renderShadow__(instance, `
@@ -243,7 +331,7 @@ export default class VegtexComponent {
             }
         }
         //shadow rendering initial
-        else if(this.renderWay == 'shadow') {
+        else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
             this.__renderShadow__(instance, `
                 ${this.style ? `<style>${this.style.css}</style>` : ''}
                 ${instance.initialInner}
