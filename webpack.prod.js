@@ -1,13 +1,10 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const devMode = process.env.NODE_ENV !== 'production'
-
 module.exports = {
     entry: { 
-        main: devMode ? "./src/test/index.js" : "./src/framework/js/vegtex.js" 
+        main: "./src/framework/js/vegtex.js" 
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -26,7 +23,7 @@ module.exports = {
                 test: /\.scss$/,
                 exclude: /node_modules/,
                 use: [ 
-                    devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    "style-loader",
                     "css-loader",
                     "sass-loader"
                 ],
@@ -44,16 +41,7 @@ module.exports = {
         ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            inject: false,
-            hash: true,
-            template: "./src/test/index.html",
-            filename: "index.html",
-        }),
-        new MiniCssExtractPlugin({
-            filename: 'vegtex.css',
-            chunkFilename: '[id].css'
-        }),
+        new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
     ]
 };

@@ -3,9 +3,10 @@
   "version": "1.1.0",
   "description": "HTML Framework for easier and faster development of beautiful websites.",
   "main": "webpack.config.js",
+  "files": ["dist/*.js"],
   "scripts": {
-    "serve": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "serve": "webpack serve --mode development --config webpack.dev.js",
+    "build": "webpack --mode production --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
