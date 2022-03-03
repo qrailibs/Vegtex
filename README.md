@@ -22,7 +22,7 @@ import vegtex from 'vegtex'
 vegtex.use('light', 'azure')
 
 new VegtexComponent('vg-counter', {
-    click: (instance, e) => {
+    click(instance, e) {
         instance.x++
     },
     locals: {
@@ -38,7 +38,13 @@ Example SPA page with Vegtex:
 ```html
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Vegtex Single-Page Application</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     </head>
     <body spa>
         <vg-sidebar pos-left size-lg>
