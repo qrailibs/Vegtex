@@ -14,20 +14,56 @@ features to your web-application, there is guide how to use that features.
 ## Example: Counter
 ![Basic counter component](https://github.com/Proxymal/Vegtex/blob/main/other/vegtex-counter.gif)
 ```html
-<vg-counter></vg-counter>
+<my-counter></my-counter>
 ```
 ```js
 import vegtex from 'vegtex'
 
 vegtex.use('light', 'azure')
 
-new VegtexComponent('vg-counter', {
-    click(instance, e) {
-        instance.x++
+new VegtexComponent('my-counter', {
+    template() {
+        return `
+            <p>Clicked ${this.x} times</p>
+        `
     },
+    style() {
+        this.addHover(function() {
+            return {
+                background: this.color9
+            }
+        })
+
+        return {
+            display: 'flex',
+            justify_content: 'center',
+            align_items: 'center',
+
+            min_width: '100px',
+            min_height: '100px',
+
+            margin_top: '25px',
+
+            cursor: 'pointer',
+            user_select: 'none',
+
+            background: this.color10,
+
+            border_radius: this.borderRadius,
+
+            transition: this.transition
+        }
+    },
+    events: {
+        click(instance, e) {
+            instance.$locals.x++
+            console.log(instance.$locals.x)
+        }
+    },
+
     locals: {
         x: 0
-    }
+    },
 })
 ```
 
