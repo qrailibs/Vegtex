@@ -12,7 +12,7 @@ Vegtex is modern JavaScript Framework that adds alot of
 features to your web-application, there is guide how to use that features.
 
 ## Example: Counter
-![Basic counter component](https://github.com/Proxymal/Vegtex/blob/main/other/vegtex-counter.gif?raw=true)
+![Basic counter component](https://github.com/Proxymal/Vegtex/blob/main/other/vegtex-counter.gif)
 ```html
 <vg-counter></vg-counter>
 ```
