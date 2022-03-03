@@ -49,44 +49,7 @@ $shadow-warning: 0px 73px 74px rgba(255, 162, 0, 0.63), 0px 26.6462px 27.0112px 
 $shadow-danger: 0px 100px 80px rgba(255, 19, 94, 0.34), 0px 41.7776px 33.4221px rgba(255, 19, 94, 0.24441), 0px 22.3363px 17.869px rgba(255, 19, 94, 0.202676), 0px 12.5216px 10.0172px rgba(255, 19, 94, 0.17), 0px 6.6501px 5.32008px rgba(255, 19, 94, 0.137324), 0px 2.76726px 2.21381px rgba(255, 19, 94, 0.0955895);
 
 // TRANSITION -----
-$transition: .3s ease-in-out;
-
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-Light.ttf") format("truetype");
-    font-weight: 300;
-    font-style: normal;
-}
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-Medium.ttf") format("truetype");
-    font-weight: 500;
-    font-style: normal;
-}
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-SemiBold.ttf") format("truetype");
-    font-weight: 600;
-    font-style: normal;
-}
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: "Inter";
-    src: url("/src/framework/font/inter/Inter-ExtraBold.ttf") format("truetype");
-    font-weight: 800;
-    font-style: normal;
-}
+$transition: var(--transition);
 
 //------------------------
 // THEMING, COLORS
@@ -101,6 +64,8 @@ $transition: .3s ease-in-out;
     --text-size-minibutton: 14px;
     --text-size-description: 12px;
     --text-size-minidescription: 9px;
+
+    --transition: .3s ease-in-out;
 }
 /* Default */
 .theme-dark {

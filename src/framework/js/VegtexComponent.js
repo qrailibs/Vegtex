@@ -67,33 +67,28 @@ export default class VegtexComponent {
         this.attributes = data?.attributes || {}
 
         // HTML & Custom events on component
-        this.events = data?.events || {}
+        this.events = {}
+        if(data?.events) {
+            Object.keys(data.events).forEach(eventName => {
+                this.addEventListener(eventName, data.events[eventName])
+            })
+        }
 
         // CSS style of component
-        this.style = data?.style
+        this.style = data?.style && typeof data.style === 'function' 
+            ? new VegtexStyle(data.style) : undefined
 
         // Locals (Methods, Variables)
-        this.locals = data?.locals || {}
+        this.initialLocals = data?.locals || {}
 
         // Template of component
         this.template = data?.template || ``
 
         // Render way
         this.renderWay = data?.renderWay || VegtexComponent.renderWays.dom
-    
+
         // Init in DOM
         this.__initTag__()
-    }
-
-
-
-    /**
-     * Define component attribute that will be observed
-     * @param {string} attribute - Attribute name
-     * @param {attrCallback} onChange - when attribute value of any component instance was changed
-     */
-    defineAttribute(attribute, onChange) {
-        this.attributes[attribute] = onChange
     }
 
 
@@ -104,33 +99,37 @@ export default class VegtexComponent {
      */
     static get events() {
         return {
-            preRender: '__prerender__',
-            postRender: '__postrender__',
+            beforeRender: '__beforerender__',
+            afterRender: '__afterrender__',
 
             added: '__added__',
             removed: '__removed__',
             adopted: '__adopted__',
+            initialized: '__init__',
 
             defined: '__defined__'
         }
     }
-
-    /**
-     * Add global event listener for all instances of component
-     * @param {vegtextEvent|string} event - DOM event name
-     */
-    addEventListener(event, callback) {
-        this.events[event] = callback
+    addEventListener(event, handler) {
+        // Init event handlers
+        if(!this.events[event])
+            this.events[event] = []
+        
+        // Add event handler
+        this.events[event].push(handler)
+    }
+    emit(event, data) {
+        // Is event handlers exists
+        if(this.events[event]) 
+            // Call each handler
+            this.events[event].forEach(handler =>
+                Array.isArray(data) ?
+                    handler(...data)
+                    : handler(data)
+            )
     }
 
-    /**
-     * Define component local method or variable
-     * @param {string} name - name of the local
-     * @param {object} value - value of the local
-     */
-    defineLocal(name, value) {
-        this.locals[name] = value
-    }
+    
 
     /**
      * Initialize HTML tag of component
@@ -146,41 +145,59 @@ export default class VegtexComponent {
                     //init
                     super()
                     
-                    this.component = component
+                    //component of the element
+                    this.$component = component
 
                     //initial inner nad outer html of current dom element
-                    this.initialInner = this.innerHTML
-                    this.initialOuter = this.outerHTML
+                    this.$initialInner = this.innerHTML
+                    this.$initialOuter = this.outerHTML
+
+                    //inititial values of locals (methods, properties)
+                    this.$locals = component.initialLocals
+                    this.$locals = new Proxy(this.$locals, {
+                        get: (target, name) => {
+                            return target[name]
+                        },
+                        set: (target, name, value) => {
+                            if(target[name] !== undefined) {
+                                //apply value
+                                target[name] = value
+
+                                //TODO: call watched variables
+    
+                                //rerender on local change
+                                this.render()
+
+                                //success
+                                return true
+                            }
+                            else
+                                return false
+                        }
+                    })
                     
                     //init
-                    this.component.__initInstance__(this)
+                    this.$component.__initInstance__(this)
 
                     //attach shadow dom
-                    this.component.__attachShadow__(this)
+                    this.$component.__attachShadow__(this)
                     
                     //render
-                    this.component.__renderInstance__(this)
+                    this.$component.__renderInstance__(this)
+                }
 
-                    //define locals (methods, properties)
-                    for(const localName of Object.keys(component.locals)) {
-                        this[localName] = component.locals[localName]
-                    }
+                render() {
+                    this.$component.__renderInstance__(this)
                 }
 
                 connectedCallback() {
-                    //call event '__added__' (if handled)
-                    if(this.component.events['__added__'])
-                        this.component.events['__added__'](this)
+                    this.$component.emit(VegtexComponent.events.added, this)
                 }
                 disconnectedCallback() { 
-                    //call event '__removed__' (if handled)
-                    if(this.component.events['__removed__'])
-                        this.component.events['__removed__'](this)
+                    this.$component.emit(VegtexComponent.events.removed, this)
                 }
                 adoptedCallback() { 
-                    //call event '__adopted__' (if handled)
-                    if(this.component.events['__adopted__'])
-                        this.component.events['__adopted__'](this)
+                    this.$component.emit(VegtexComponent.events.adopted, this)
                 }
 
                 static get observedAttributes() {
@@ -201,27 +218,31 @@ export default class VegtexComponent {
                 }
                 attributeChangedCallback(attrName, oldVal, newVal) {
                     //call attrs observers
-                    if(this.component.attributes.constructor == Object) {
+                    if(this.$component.attributes.constructor == Object) {
                         //call attribute change (if this attribute is observed)
-                        if(this.component.attributes[attrName] !== undefined)
-                            this.component.attributes[attrName](this, oldVal, newVal)
+                        if(this.$component.attributes[attrName] !== undefined)
+                            this.$component.attributes[attrName](this, oldVal, newVal)
                     }
                     
                     //render
                     if(this.hasAttribute('dynamic') && this.attributes['dynamic'] != 'false') {
-                        this.component.__renderInstance__(this)
+                        this.render()
                     }
                 }
             }
         )
 
         //call tag initialization event
-        if(component.events['__defined__']) 
-            component.events['__defined__'](component)
+        this.emit(VegtexComponent.events.defined, this)
 
         //style
         if(this.style) {
-            document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
+            if(this.style instanceof VegtexStyle) {
+                this.style.addAdditional('color', 'white')
+                document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
+            }
+            else
+                console.error('Error, expected VegtexStyle to be as component.style')
         }
     }
 
@@ -232,17 +253,17 @@ export default class VegtexComponent {
      */
     __initInstance__(instance) {
         //observe events
-        for(var event_name in this.events) {
-            var event_func = this.events[event_name]
-
+        for(let event_name in this.events) {
             //if its default event (not nondefault like '__adopted__', etc)
             if(!event_name.startsWith('__')) {
-                instance.addEventListener(event_name, function(e) { event_func(instance, e) } )
+                instance.addEventListener(event_name, (e) => { 
+                    this.emit(event_name, [instance, e])
+                })
             }
         }
 
         //call init event
-        if(this.events['__init__'] !== undefined) this.events['__init__'](instance)
+        this.emit(VegtexComponent.events.initialized, instance)
     }
 
     /**
@@ -250,10 +271,10 @@ export default class VegtexComponent {
      * @param {Object} instance - DOM element instance
      */
     __attachShadow__(instance) {
-        const shadowMode = 'closed'
+        const shadowMode = 'open'
 
         //use shadow dom only if required (for style or rendering)
-        if(this.style || this.renderWay === VegtexComponent.renderWays.shadowDom)
+        if(this.renderWay === VegtexComponent.renderWays.shadowDom)
             instance.shadow = instance.attachShadow({mode: shadowMode})
     }
     /**
@@ -277,37 +298,47 @@ export default class VegtexComponent {
      * @param {Object} instance - DOM element instance to render
      */
     __renderInstance__(instance) {
-        //prerender event
-        if(this.events['__prerender__'] !== undefined)
-            this.events['__prerender__'](instance)
+        //before render event
+        this.emit(VegtexComponent.events.beforeRender, instance)
         
         //templating (JS)
-        if(this.template !== undefined && this.template != '') {
+        if(this.template !== undefined) {
             //context with variables
-            var context = {
-                inside: false,
-
-                component: undefined,
-
-                inner: instance.initialInner,
-                outer: instance.initialOuter
+            const context = {
+                $inside: true,
+                $component: undefined,
+                $inner: instance.$initialInner,
+                $outer: instance.$initialOuter,
             }
-            context.component = this
+            context.$component = this
 
-            //attributes
+            //add attributes to context
             if(instance.hasAttributes()) {
-                for(var attr in this.attributes) {
+                for(let attr in this.attributes) {
                     context[this.attributes[attr].name] = this.attributes[attr].textContent
+                }
+            }
+            
+            //add locals to context
+            if(instance.$locals) {
+                for(let localName of Object.keys(instance.$locals)) {
+                    context[localName] = instance.$locals[localName] 
                 }
             }
 
             //render with template
-            var rendered = this.template.call(context)
+            let rendered = context.$inner
+            // String template
+            if(typeof this.template === 'string' && this.template.length > 0)
+                rendered = this.template
+            // Function template
+            else if(typeof this.template === 'function')
+                rendered = this.template.call(context) || context.$inner
 
             //basic DOM
             if(this.renderWay == VegtexComponent.renderWays.dom) {
                 //render as child of component
-                if(context.inside)
+                if(context.$inside)
                     instance.innerHTML = rendered
                 //render as replacement
                 else
@@ -316,10 +347,10 @@ export default class VegtexComponent {
             //shadow DOM
             else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
                 //render as child of component
-                if(context.inside)
+                if(context.$inside)
                     this.__renderShadow__(instance, `
                         ${this.style ? `<style>${this.style.css}</style>` : ''}
-                        ${instance.initialInner}
+                        ${instance.$initialInner}
                     `)
                 //render as replacement -> error
                 else
@@ -334,12 +365,11 @@ export default class VegtexComponent {
         else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
             this.__renderShadow__(instance, `
                 ${this.style ? `<style>${this.style.css}</style>` : ''}
-                ${instance.initialInner}
+                ${instance.$initialInner}
             `)
         }
 
-        //postrender event
-        if(this.events['__postrender__'] !== undefined)
-            this.events['__postrender__'](instance)
+        //after render event
+        this.emit(VegtexComponent.events.afterRender, instance)
     }
 }

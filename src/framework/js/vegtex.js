@@ -71,7 +71,7 @@ const vegtex = {
         if(this.attributes[attr] !== undefined) { return true; }
         
         //check components attributes
-        this.components.forEach(tag => {
+        this.$components.forEach(tag => {
             if(tag.attributes.includes(attr)) {
                 return true;
             }
