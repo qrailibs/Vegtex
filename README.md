@@ -11,14 +11,40 @@ npm i vegtex -D
 Vegtex is modern JavaScript Framework that adds alot of 
 features to your web-application, there is guide how to use that features.
 
-## For SPA (Single Page Application)
+## Example: Counter
+![Basic counter component](https://github.com/Proxymal/Vegtex/blob/main/other/vegtex-counter.gif)
+```html
+<vg-counter></vg-counter>
+```
+```js
+import vegtex from 'vegtex'
+
+vegtex.use('light', 'azure')
+
+new VegtexComponent('vg-counter', {
+    click(instance, e) {
+        instance.x++
+    },
+    locals: {
+        x: 0
+    }
+})
+```
+
+## Example: SPA
 Vegtex Framework has a lot of useful components for your **SPA**.
 
 Example SPA page with Vegtex:
 ```html
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Vegtex Single-Page Application</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     </head>
     <body spa>
         <vg-sidebar pos-left size-lg>
