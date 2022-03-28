@@ -59,7 +59,7 @@ new VegtexComponent('my-counter', {
                 Style.Transition.Smooth
             ],
             ':hover': [
-                Style.BgColor.color9,
+                Style.Force(Style.BgColor.color9),
             ]
         }
     },
