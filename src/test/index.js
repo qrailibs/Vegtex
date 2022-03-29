@@ -48,3 +48,11 @@ new vegtex.VegtexComponent('vg-counter', {
         x: 0
     },
 })
+
+new vegtex.VegtexComponent('form-container', {
+    style: (Style) => ({
+        ':host': [
+            Style.BgColor.color9
+        ]
+    })
+})

@@ -229,7 +229,13 @@ export default class VegtexComponent {
         if(this.style) {
             if(this.style instanceof VegtexStyle) {
                 this.style.addAdditional('color', 'white')
-                document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
+
+                // Is global style exists
+                if(document.getElementById('vegtex-style'))
+                    document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
+                // Do after load
+                else
+                    document.addEventListener('load', () => document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag))
             }
             else
                 console.error('Error, expected VegtexStyle to be as component.style')
