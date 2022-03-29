@@ -1,6 +1,6 @@
 {
   "name": "vegtex",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "HTML Framework for easier and faster development of beautiful websites.",
   "main": "webpack.config.js",
   "files": [
