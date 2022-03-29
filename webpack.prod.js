@@ -8,7 +8,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "vegtex.[chunkhash].js",
+        filename: "index.js",
     },
     module: {
         rules: [

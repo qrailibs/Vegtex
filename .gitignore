@@ -1,3 +1,4 @@
 # Ignore npm modules, cache
 /node_modules
 /.cache
+PUBLISHING.md
