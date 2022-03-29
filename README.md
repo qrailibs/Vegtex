@@ -58,7 +58,7 @@ new vegtex.VegtexComponent('my-counter', {
         ':hover': [
             Style.Force(Style.BgColor.color9),
         ]
-    },
+    }),
     events: {
         click(instance, e) {
             instance.$locals.x++
