@@ -208,24 +208,15 @@ export default class VegtexComponent {
                 static get observedAttributes() {
                     let observed = []
 
-                    //without or with observers
-                    if(component.attributes.constructor == Array) { 
-                        observed = component.attributes 
-                    }
-                    else if(component.attributes.constructor == Object) { 
-                        observed = Object.keys(component.attributes) 
-                    }
-                    
-                    //observe dynamic attr
-                    observed.push('dynamic')
+                    //TODO: add globals
 
                     return observed
                 }
                 attributeChangedCallback(attrName, oldVal, newVal) {
-                    // Local is exists?
+                    // Global is exists?
                     if(this.$locals[attrName]) {
-                        // Reassign local
-                        //this.$locals[attrName] = newVal
+                        // Reassign global
+                        //this.$globals[attrName] = newVal
                     }
                 }
             }
