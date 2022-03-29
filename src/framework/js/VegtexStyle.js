@@ -104,7 +104,11 @@ export default class VegtexStyle {
         return {
             // Block width & height
             Width: valCollection('width', [unitValues]),
-            Height: valCollection('width', [unitValues]),
+            MinWidth: valCollection('min-width', [unitValues]),
+            MaxWidth: valCollection('max-width', [unitValues]),
+            Height: valCollection('height', [unitValues]),
+            MinHeight: valCollection('min-height', [unitValues]),
+            MaxHeight: valCollection('max-height', [unitValues]),
             Fill: val('width', '100%') + val('height', '100%'),
             Fullscreen: val('width', '100vw') + val('height', '100vh'),
 

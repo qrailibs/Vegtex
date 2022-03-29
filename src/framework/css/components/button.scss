@@ -4,7 +4,7 @@
 button, .vg-button {
     @extend .noselect;
     
-    width: min-content;
+    width: max-content;
 
     border-radius: $border-radius;
 
@@ -140,8 +140,4 @@ button, .vg-button {
     &:disabled {
         cursor: not-allowed;
     }
-}
-
-[rounded] {
-    border-radius: 50%;
 }

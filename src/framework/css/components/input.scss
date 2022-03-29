@@ -1,0 +1,65 @@
+//------------------------
+// INPUT
+//------------------------
+input, .vg-input {
+    width: 100%;
+
+    margin-bottom: 12px;
+
+    border: 1px solid $color-10;
+    border-radius: $border-radius;
+
+    transition: $transition;
+    transition-property: background-color, border-color;
+    outline: none;
+
+    font-family: inherit;
+    
+    color: $color-1;
+    background-color: $color-10;
+
+    ::placeholder,::-moz-placeholder {
+        color: $color-5;
+    }
+
+    // Sizes
+    &[size-lg] {
+        padding: 16px 14px;
+
+        font-weight: 500;
+        font-size: 16px;
+
+        line-height: 16px;
+    }
+    &[size-md] {
+        padding: 10px 14px;
+
+        font-weight: 400;
+        font-size: 14px;
+
+        line-height: 16px;
+    }
+    &[size-sm] {
+        padding: 6px 12px;
+        
+        font-weight: 600;
+        font-size: 14px;
+
+        line-height: 20px;
+    }
+
+    // Focus state
+    &:focus {
+        border: 1px solid $color-accent;
+        outline: 4px solid $color-accent-semi;
+    }
+    // Disabled state
+    &:disabled {
+        cursor: not-allowed;
+
+        opacity: 0.7;
+        ::placeholder, ::-moz-placeholder {
+            color: $color-8;
+        }
+    }
+}
