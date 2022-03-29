@@ -88,7 +88,7 @@ export default class VegtexComponent {
         this.__initTag__()
     }
 
-    use(attributes, inner = '') {
+    use(inner = ``, attributes = {}) {
         return `<${this.tag} 
             ${Object.keys(attributes).map((attrName) => `${attrName}="${attributes[attrName]}"`).join(' ')}
         >
