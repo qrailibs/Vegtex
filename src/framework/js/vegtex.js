@@ -34,4 +34,4 @@ function use(scheme, schemeAccent) {
     document.head.appendChild(vegtexStyles)
 }
 
-export { use, VegtexComponent }
+export default { use, VegtexComponent }

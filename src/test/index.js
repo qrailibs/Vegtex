@@ -1,8 +1,8 @@
-import { use, VegtexComponent } from '../framework/js/vegtex'
+import vegtex from '../framework/js/vegtex'
 
-use('dark', 'azure')
+vegtex.use('dark', 'azure')
 
-new VegtexComponent('vg-counter', {
+new vegtex.VegtexComponent('vg-counter', {
     template() {
         return `
             <p>Clicked ${this.x} times</p>
