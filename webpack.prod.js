@@ -9,7 +9,9 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "index.js",
-        libraryTarget : 'commonjs2'
+        libraryTarget : 'commonjs2',
+        libraryExport: 'default',
+        library: 'vegtex',
     },
     module: {
         rules: [
@@ -44,5 +46,8 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
-    ]
+    ],
+    resolve: {
+        extensions: ['.js']
+    }
 };
