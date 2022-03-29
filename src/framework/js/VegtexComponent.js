@@ -235,7 +235,7 @@ export default class VegtexComponent {
                     document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag)
                 // Do after load
                 else
-                    document.addEventListener('load', () => document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag))
+                    document.addEventListener('DOMContentLoaded', () => document.getElementById('vegtex-style').innerHTML += this.style.css(this.tag))
             }
             else
                 console.error('Error, expected VegtexStyle to be as component.style')
