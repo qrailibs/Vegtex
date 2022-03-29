@@ -82,7 +82,7 @@ const vegtex = {
     },
 }
 
-export default {
+export {
     VegtexComponent,
     VegtexStyle,
     vegtex
