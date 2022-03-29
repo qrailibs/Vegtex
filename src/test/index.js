@@ -1,4 +1,4 @@
-import { vegtex, VegtexComponent, VegtexStyle } from '../framework/js/vegtex'
+import { vegtex, VegtexComponent } from '../framework/js/vegtex'
 
 vegtex.use('dark', 'azure')
 
@@ -8,33 +8,35 @@ new VegtexComponent('vg-counter', {
             <p>Clicked ${this.x} times</p>
         `
     },
-    style() {
-        this.addHover(function() {
-            return {
-                background: this.color9
-            }
-        })
-
-        return {
-            display: 'flex',
-            justify_content: 'center',
-            align_items: 'center',
-
-            min_width: '100px',
-            min_height: '100px',
-
-            margin_top: '25px',
-
-            cursor: 'pointer',
-            user_select: 'none',
-
-            background: this.color10,
-
-            border_radius: this.borderRadius,
-
-            transition: this.transition
-        }
-    },
+    style: (Style)  => ({
+        ':host': [
+            // Background & Text color
+            Style.BgColor.color10,
+            Style.TextColor.color0,
+            
+            // Content auto-flow
+            Style.AutoContent,
+            Style.Align.Center,
+            Style.Justify.Center,
+            
+            // Margin & Padding
+            Style.Margin.Top.px(25),
+            Style.Padding.All.px(25),
+            
+            // Cursor, text selection
+            Style.Cursor.Clickable,
+            Style.Selection.None,
+            
+            // Border rounding
+            Style.Rounding.Default,
+            
+            // Smooth transitions
+            Style.Transition.Smooth
+        ],
+        ':hover': [
+            Style.BgColor.color9,
+        ]
+    }),
     events: {
         click(instance, e) {
             instance.$locals.x++

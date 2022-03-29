@@ -76,7 +76,7 @@ export default class VegtexComponent {
 
         // CSS style of component
         this.style = data?.style && typeof data.style === 'function' 
-            ? new VegtexStyle(data.style) : undefined
+            ? new VegtexStyle(data.style) : null
 
         // Locals (Methods, Variables)
         this.initialLocals = data?.locals || {}
