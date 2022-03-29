@@ -4,7 +4,7 @@ Vegtex - HTML Framework for easier and faster development of beautiful websites.
 # Installation
 Install via npm:
 ```
-npm i vegtex -D
+npm i vegtex@1.4.7 -D
 ```
 
 # How to use
@@ -21,57 +21,49 @@ import vegtex from 'vegtex'
 
 vegtex.use('light', 'azure')
 
-new VegtexComponent('my-counter', {
+new vegtex.VegtexComponent('my-counter', {
+    locals: {
+        x: 0
+    },
+    
     template() {
         return `
             <p>Clicked ${this.x} times</p>
         `
     },
-    style(Style) {
-        this.addHover(function() {
-            return {
-                background: this.color9
-            }
-        })
+    style: (Style) => ({
+        ':host': [
+            // Background & Text color
+            Style.BgColor.color10,
+            Style.TextColor.color0,
 
-        return {
-            ':host': [
-                // Background & Text color
-                Style.BgColor.color10,
-                Style.TextColor.color0,
-                
-                // Content auto-flow
-                Style.AutoContent,
-                Style.Align.Center,
-                Style.Justify.Center,
-                
-                // Margin
-                Style.Margin.Top.px(25),
-                
-                // Cursor, text selection
-                Style.Cursor.Clickable,
-                Style.Selection.None,
-                
-                // Border rounding
-                Style.Rounding.Default,
-                
-                // Smooth transitions
-                Style.Transition.Smooth
-            ],
-            ':hover': [
-                Style.Force(Style.BgColor.color9),
-            ]
-        }
+            // Content auto-flow
+            Style.AutoContent,
+            Style.Align.Center,
+            Style.Justify.Center,
+
+            // Margin
+            Style.Margin.Top.px(25),
+
+            // Cursor, text selection
+            Style.Cursor.Clickable,
+            Style.Selection.None,
+
+            // Border rounding
+            Style.Rounding.Default,
+
+            // Smooth transitions
+            Style.Transition.Smooth
+        ],
+        ':hover': [
+            Style.Force(Style.BgColor.color9),
+        ]
     },
     events: {
         click(instance, e) {
             instance.$locals.x++
             console.log(instance.$locals.x)
         }
-    },
-
-    locals: {
-        x: 0
     },
 })
 ```
