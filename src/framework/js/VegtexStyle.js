@@ -90,7 +90,7 @@ export default class VegtexStyle {
         })
 
         // Create value
-        const val = (cssProp, cssValue) => `${cssProp}: ${cssValue};`
+        const val = (cssProp, cssValue) => `${cssProp}:${cssValue};`
         // Create values collection
         const valCollection = (cssProp, values) => {
             let resultProps = {}
@@ -245,8 +245,41 @@ export default class VegtexStyle {
             }
         })
 
-        console.log(css)
+        return css
+    }
+
+    /**
+    * Generate style attribute for inline using
+    *
+    * @this    {VegtexStyle}
+    * @returns {String} Generated CSS
+    */
+    inline() {
+        let css = ''
+
+        const states = this.propsCallback(VegtexStyle.Style())
+        Object.keys(states).forEach(stateName => {
+            // Is host state
+            if(stateName.trim() == ':host') {
+                // If not empty
+                if(states[stateName].length > 0) {
+                    states[stateName].forEach(propCss => {
+                        css += propCss
+                    })
+                }
+            }
+            /*
+                // Additional
+                for(const propName of Object.keys(this.additionalProps)) {
+                    rulesCss += `\n    ${propName.replaceAll('_','-')}: ${this.additionalProps[propName]};`
+                }
+            */
+        })
 
         return css
     }
+}
+
+VegtexStyle.prototype.toString = function() {
+    return this.inline()
 }
