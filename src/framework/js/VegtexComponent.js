@@ -63,9 +63,6 @@ export default class VegtexComponent {
         // HTML tag of component
         this.tag = tag
 
-        // HTML attributes of component
-        this.attributes = data?.attributes || {}
-
         // HTML & Custom events on component
         this.events = {}
         if(data?.events) {
@@ -89,6 +86,14 @@ export default class VegtexComponent {
 
         // Init in DOM
         this.__initTag__()
+    }
+
+    use(attributes, inner = '') {
+        return `<${this.tag} 
+            ${Object.keys(attributes).map((attrName) => `${attrName}="${attributes[attrName]}"`).join(' ')}
+        >
+            ${inner}
+        </${this.tag}>`
     }
 
 
@@ -217,16 +222,10 @@ export default class VegtexComponent {
                     return observed
                 }
                 attributeChangedCallback(attrName, oldVal, newVal) {
-                    //call attrs observers
-                    if(this.$component.attributes.constructor == Object) {
-                        //call attribute change (if this attribute is observed)
-                        if(this.$component.attributes[attrName] !== undefined)
-                            this.$component.attributes[attrName](this, oldVal, newVal)
-                    }
-                    
-                    //render
-                    if(this.hasAttribute('dynamic') && this.attributes['dynamic'] != 'false') {
-                        this.render()
+                    // Local is exists?
+                    if(this.$locals[attrName]) {
+                        // Reassign local
+                        //this.$locals[attrName] = newVal
                     }
                 }
             }
@@ -311,13 +310,6 @@ export default class VegtexComponent {
                 $outer: instance.$initialOuter,
             }
             context.$component = this
-
-            //add attributes to context
-            if(instance.hasAttributes()) {
-                for(let attr in this.attributes) {
-                    context[this.attributes[attr].name] = this.attributes[attr].textContent
-                }
-            }
             
             //add locals to context
             if(instance.$locals) {

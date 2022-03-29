@@ -48,3 +48,14 @@ new vegtex.VegtexComponent('vg-counter', {
         x: 0
     },
 })
+
+let formContainer = new vegtex.VegtexComponent('form-container', {
+    template() {
+        return `<p>${this.some || ''}</p>`
+    },
+
+    locals: { 
+        some: null
+    }
+})
+console.log(formContainer.use({ a: 100, b: 'x' }))

@@ -105,8 +105,8 @@ export default class VegtexStyle {
             // Block width & height
             Width: valCollection('width', [unitValues]),
             Height: valCollection('width', [unitValues]),
-            Fill: () => val('width', '100%') + val('height', '100%'),
-            Fullscreen: () => val('width', '100vw') + val('height', '100vh'),
+            Fill: val('width', '100%') + val('height', '100%'),
+            Fullscreen: val('width', '100vw') + val('height', '100vh'),
 
             // Spacing: margin & padding
             Margin: valCollection('margin', [sidesUnitValues]),
@@ -150,6 +150,12 @@ export default class VegtexStyle {
             Transition: {
                 None: val('transition', 'none'),
                 Smooth: val('transition', '.3s ease-in-out')
+            },
+
+            // Display
+            As: {
+                Block: val('display', 'block'),
+                Inline: val('display', 'inline')
             },
 
             // Flex
