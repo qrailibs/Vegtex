@@ -27,7 +27,7 @@ new VegtexComponent('my-counter', {
             <p>Clicked ${this.x} times</p>
         `
     },
-    style() {
+    style(Style) {
         this.addHover(function() {
             return {
                 background: this.color9
@@ -35,23 +35,32 @@ new VegtexComponent('my-counter', {
         })
 
         return {
-            display: 'flex',
-            justify_content: 'center',
-            align_items: 'center',
-
-            min_width: '100px',
-            min_height: '100px',
-
-            margin_top: '25px',
-
-            cursor: 'pointer',
-            user_select: 'none',
-
-            background: this.color10,
-
-            border_radius: this.borderRadius,
-
-            transition: this.transition
+            ':host': [
+                // Background & Text color
+                Style.BgColor.color10,
+                Style.TextColor.color0,
+                
+                // Content auto-flow
+                Style.AutoContent,
+                Style.Align.Center,
+                Style.Justify.Center,
+                
+                // Margin
+                Style.Margin.Top.px(25),
+                
+                // Cursor, text selection
+                Style.Cursor.Clickable,
+                Style.Selection.None,
+                
+                // Border rounding
+                Style.Rounding.Default,
+                
+                // Smooth transitions
+                Style.Transition.Smooth
+            ],
+            ':hover': [
+                Style.Force(Style.BgColor.color9),
+            ]
         }
     },
     events: {
