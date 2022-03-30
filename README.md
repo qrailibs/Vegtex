@@ -104,4 +104,7 @@ vegtex.use('light', 'azure')
 *Mobile components isn't done yet, but we are working to make them available!*
 
 # Documentation
-[Russian Documentation](https://proxymal.ru/view/vegtex)
+[English Documentation](https://github.com/Proxymal/Vegtex/wiki)
+
+
+[Russian Mini-documentation](https://proxymal.ru/view/vegtex)
