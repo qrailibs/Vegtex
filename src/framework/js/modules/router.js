@@ -3,7 +3,18 @@ import VegtexGlobals from "../VegtexGlobals"
 
 export function createRouter(routes, options) {
     VegtexGlobals.set('router', {
-        mode: options?.mode || 'multipage'
+        mode: options?.mode || 'multipage',
+
+        navigate(page) {
+            // SPA mode
+            if(this.mode === 'spa') {
+                const routerView = VegtexGlobals.get('routerView')
+                routerView.state.page = page
+            }
+            // Multipage mode
+            else if(this.mode === 'multipage')
+                window.location = `${window.location.pathname}?page=${page}`
+        }
     })
 
     new VegtexComponent('router-view', {
@@ -37,18 +48,8 @@ export function createRouter(routes, options) {
         },
         events: {
             click() {
-                if(VegtexGlobals.exists('router')) {
-                    const router = VegtexGlobals.get('router')
-
-                    // SPA mode
-                    if(router.mode === 'spa') {
-                        const routerView = VegtexGlobals.get('routerView')
-                        routerView.state.page = this.state.to
-                    }
-                    // Multipage mode
-                    else if(router.mode === 'multipage')
-                        window.location = `${window.location.pathname}?page=${this.state.to}`
-                }
+                if(VegtexGlobals.exists('router'))
+                    VegtexGlobals.get('router').navigate(this.state.to)
                 else
                     throw new Error('Failed to navigate, router was not defined')
             },
