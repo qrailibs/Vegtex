@@ -105,4 +105,6 @@ vegtex.use('light', 'azure')
 
 # Documentation
 [English Documentation](https://github.com/Proxymal/Vegtex/wiki)
+
+
 [Russian Mini-documentation](https://proxymal.ru/view/vegtex)
