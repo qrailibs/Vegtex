@@ -19,19 +19,7 @@ export function createRouter(routes, options) {
                 || this.state.pages['404']
                 || `<p>Error: page '${this.state.page}' not found, 404 page was not defined.</p>`
         },
-        style(Style) {
-            return {
-                ':host': [
-                    //Style.Fullscreen,
-                    Style.AutoContent,
-                    Style.Direction.Vertical,
-                    Style.Align.Center,
-                    Style.Justify.Center,
-    
-                    Style.Padding.All.rem(1),
-                ]
-            }
-        },
+        style: options?.viewStyle,
         events: {
             __added__() {
                 if(!VegtexGlobals.exists('routerView'))
@@ -47,7 +35,6 @@ export function createRouter(routes, options) {
                 to: this.getAttribute('to')
             }
         },
-
         events: {
             click() {
                 if(VegtexGlobals.exists('router')) {
@@ -66,8 +53,7 @@ export function createRouter(routes, options) {
                     throw new Error('Failed to navigate, router was not defined')
             },
         },
-
-        style: (Style) => ({
+        style: options?.linkStyle || ((Style) => ({
             ':host': [
                 Style.Width.min,
 
@@ -79,6 +65,6 @@ export function createRouter(routes, options) {
             ':hover': [
                 Style.TextDecoration.Underline
             ]
-        })
+        }))
     })
 }
