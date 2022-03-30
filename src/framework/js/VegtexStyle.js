@@ -135,6 +135,15 @@ export default class VegtexStyle {
                 Normal: val('font-weight', 'normal'),
                 Bold: val('font-weight', 'bold')
             },
+            TextAlign: {
+                Left: val('text-align', 'left'),
+                Center: val('text-align', 'center'),
+                Right: val('text-align', 'right')
+            },
+            TextDecoration: {
+                Underline: val('text-decoration', 'underline'),
+                None: val('text-decoration', 'none')
+            },
 
             // Cursor
             Cursor: {
@@ -184,6 +193,8 @@ export default class VegtexStyle {
 
             //Border
             Rounding: {
+                ...unitValues('border-radius'),
+                
                 Default: val('border-radius', vars.borderRadius)
             },
 

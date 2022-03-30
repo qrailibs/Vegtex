@@ -5,7 +5,7 @@ vegtex.use('dark', 'azure')
 new vegtex.VegtexComponent('vg-counter', {
     template() {
         return `
-            <p>Clicked ${this.x} times</p>
+            <p>Clicked ${this.state.x} times</p>
         `
     },
     style: (Style)  => ({
@@ -38,21 +38,22 @@ new vegtex.VegtexComponent('vg-counter', {
         ]
     }),
     events: {
-        click(instance, e) {
-            instance.$locals.x++
-            console.log(instance.$locals.x)
+        click(e) {
+            this.state.x++
+            console.log(this.state.x)
         }
     },
 
-    locals: {
+    state: () => ({
         x: 0
-    },
+    }),
 })
 
-new vegtex.VegtexComponent('form-container', {
-    style: (Style) => ({
-        ':host': [
-            Style.BgColor.color9
-        ]
-    })
+const routes = {
+    'index': `<p>index page</p>`,
+    'info': `<p>information page</p>`
+}
+
+vegtex.createRouter(routes, {
+    mode: 'spa'
 })

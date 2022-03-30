@@ -27,6 +27,7 @@ export const Item = new VegtexComponent('vg-item', {
             let navigateTo = e.target.getAttribute('navigate')
             
             if(navigateTo) {
+                //TODO: navigate
                 console.log(navigateTo)
             }
         }

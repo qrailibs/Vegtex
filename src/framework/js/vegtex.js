@@ -4,6 +4,7 @@ import '../css/all.scss'
 // Base JS
 import VegtexComponent from './VegtexComponent.js'
 import VegtexStyle from './VegtexStyle.js'
+import VegtexGlobals from './VegtexGlobals'
 
 // Components: Base
 import { Card } from './components/Card'
@@ -13,9 +14,11 @@ import { Badge } from './components/Badge'
 import { Progress } from './components/Progress'
 //TODO: List
 import { Item } from './components/Item'
-
 // Components: SPA
 import { Sidebar } from './components/Sidebar'
+
+// Modules
+import { createRouter } from './modules/router'
 
 function use(scheme, schemeAccent) {
     //validate scheme
@@ -32,6 +35,18 @@ function use(scheme, schemeAccent) {
     const vegtexStyles = document.createElement('style')
     vegtexStyles.setAttribute('id', 'vegtex-style')
     document.head.appendChild(vegtexStyles)
+
+    //init globals
+    VegtexGlobals.init()
 }
 
-export default { use, VegtexComponent, VegtexStyle }
+export default { 
+    // Base functions
+    use,
+
+    // Router functions
+    createRouter,
+
+    // Base classes
+    VegtexComponent, VegtexStyle, VegtexGlobals
+}
