@@ -4,7 +4,7 @@ Vegtex - HTML Framework for easier and faster development of beautiful websites.
 # Installation
 Install via npm:
 ```
-npm i vegtex@1.4.7 -D
+npm i vegtex@1.5.6 -D
 ```
 
 # How to use
