@@ -1,0 +1,63 @@
+//------------------------
+// ALERT
+//------------------------
+vg-alert, .vg-alert {
+    border-radius: $border-radius;
+
+    width: 100%;
+
+    padding: 16px;
+
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+
+    background-color: $color-accent;
+    color: $color-1;
+
+    &[style-accent] {
+        background-color: $color-accent;
+        color: $color-1;
+    }
+    &[style-light] {
+        background-color: $color-1;
+        color: $color-10;
+    }
+    &[style-secondary] {
+        background-color: $color-9;
+        color: $color-1;
+    }
+    &[style-ghost] {
+        background-color: transparent;
+        color: $color-1;
+    }
+    &[style-outline] {
+        background-color: transparent;
+        color: $color-1;
+        border: 2px solid $color-9;
+    }
+
+    &[style-success] {
+        background-color: $color-success;
+        color: white;
+    }
+    &[style-warning] {
+        background-color: $color-warning;
+        color: white;
+    }
+    &[style-danger] {
+        background-color: $color-danger;
+        color: white;
+    }
+
+    [alert-title] {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+    }
+    [alert-text] {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+    }
+}

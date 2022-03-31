@@ -12,6 +12,7 @@ import { Card } from './components/Card'
 import { Icon } from './components/Icon'
 import { IconStack } from './components/IconStack'
 import { Badge } from './components/Badge'
+import { Alert } from './components/Alert'
 import { Progress } from './components/Progress'
 //TODO: List
 import { Item } from './components/Item'
