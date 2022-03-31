@@ -22,49 +22,49 @@ import vegtex from 'vegtex'
 vegtex.use('light', 'azure')
 
 new vegtex.VegtexComponent('my-counter', {
-    locals: {
-        x: 0
-    },
-    
     template() {
         return `
-            <p>Clicked ${this.x} times</p>
+            <p>Clicked ${this.state.x} times</p>
         `
     },
-    style: (Style) => ({
+    style: (Style)  => ({
         ':host': [
             // Background & Text color
             Style.BgColor.color10,
             Style.TextColor.color0,
-
+            
             // Content auto-flow
             Style.AutoContent,
             Style.Align.Center,
             Style.Justify.Center,
-
-            // Margin
+            
+            // Margin & Padding
             Style.Margin.Top.px(25),
-
+            Style.Padding.All.px(25),
+            
             // Cursor, text selection
             Style.Cursor.Clickable,
             Style.Selection.None,
-
+            
             // Border rounding
             Style.Rounding.Default,
-
+            
             // Smooth transitions
             Style.Transition.Smooth
         ],
         ':hover': [
-            Style.Force(Style.BgColor.color9),
+            Style.BgColor.color9,
         ]
     }),
     events: {
-        click(instance, e) {
-            instance.$locals.x++
-            console.log(instance.$locals.x)
+        click(e) {
+            this.state.x++
         }
     },
+
+    state: () => ({
+        x: 0
+    }),
 })
 ```
 
