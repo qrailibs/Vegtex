@@ -62,7 +62,7 @@ export default class VegtexScope {
 
                             // Event
                             if(scopeAttr === 'ref') {
-                                this.props[propKey] = { 
+                                this.props[value] = { 
                                     type: 'ref',
                                     ref: value
                                 }
