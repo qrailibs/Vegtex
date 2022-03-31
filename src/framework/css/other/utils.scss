@@ -1,24 +1,30 @@
-.noselect {
+.noselect, [noselect] {
     user-select: none;
 }
-.nodrag {
+.nodrag, [nodrag] {
     pointer-events: none;
 
     user-select: none;
     user-drag: none;
 }
 
-.fill, [fill] {
-    width: 100%;
-    height: 100%;
-}
-[fill-w] {
+.fill, [fill],
+.fill-w, [fill-w] {
     width: 100%;
 }
-[fill-h] {
+.fill, [fill],
+.fill-h, [fill-h] {
     height: 100%;
 }
 
-[rounded] {
+.rounded, [rounded] {
     border-radius: 50%;
+}
+
+.hidden, [hidden] {
+    display: none;
+}
+
+.invisible, [invisible] {
+    opacity: 0;
 }

@@ -20,6 +20,27 @@ function waitFor(selector) {
     });
 }
 
+const events = [
+    // Load / Unload
+    'load', 'unload',
+    // Click
+    'click', 'dblclick',
+    // Focus / Blue
+    'focus', 'blur',
+    // Key
+    'keydown', 'keyup', 'keypress',
+    // Mouse
+    'mousedown', 'mouseup', 'mousemove', 'mouseover', 'mouseout', 'wheel',
+    // Drag
+    'drag', 'dragend', 'dragleave', 'dragenter', 'dragover', 'dragstart', 'drop', 'scroll',
+    // Input
+    'change', 'input', 'select',
+    // Form
+    'submit', 'reset', 'invalid', 'search',
+    // Clipboard
+    'copy', 'cut', 'paste',
+]
+
 export default class VegtexScope {
     constructor(scopeName, props) {
         let scopeElementSelector = `[\\@scope="${scopeName}"]`
@@ -29,31 +50,54 @@ export default class VegtexScope {
             .then(() => {
                 // Element for scope
                 this.element = document.querySelector(scopeElementSelector)
-                // Element child elements
-                this.element.querySelectorAll('[\\@click]').forEach(clickListenerEl => {
-                    // Get method to call
-                    let clickAction = clickListenerEl.getAttribute('@click')
-                    // Add listener
-                    clickListenerEl.addEventListener('click', (e) => this.props[clickAction](e))
-                })
-                
-                // Make props (refs, methods)
                 this.props = {}
-                Object.keys(props).forEach(propKey => {
-                    let prop = props[propKey]
-    
-                    // Reference
-                    if(typeof prop === 'object' && prop.ref) {
-                        this.props[propKey] = { 
-                            type: 'ref', 
-                            ref: prop.ref 
+
+                // Loop scope elements
+                for(const scopeEl of this.element.children) {
+                    // Loop attributes
+                    for(const { name, value } of scopeEl.attributes) {
+                        // Is scope handled
+                        if(name.startsWith('@')) {
+                            let scopeAttr = name.replace('@', '')
+
+                            // Event
+                            if(scopeAttr === 'ref') {
+                                this.props[propKey] = { 
+                                    type: 'ref',
+                                    ref: value
+                                }
+                            }
+                            // Binding
+                            else if(scopeAttr === 'bind') {
+                                if(scopeEl.tagName === 'INPUT' || scopeEl.tagName === 'TEXTAREA')
+                                    scopeEl.addEventListener('input', (e) => this.props[value] = e.target.value)
+                                else
+                                    scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
+                            }
+                            // Reference
+                            else if(events.includes(scopeAttr)) {
+                                scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
+                            }
                         }
                     }
+                }
+                
+                // Make props (refs, methods)
+                Object.keys(props).forEach(propKey => {
+                    let prop = props[propKey]
+
                     // Method
-                    else if(typeof prop === 'function') {
+                    if(typeof prop === 'function') {
                         this.props[propKey] = { 
                             type: 'method', 
                             method: prop
+                        }
+                    }
+                    // Variable
+                    else {
+                        this.props[propKey] = { 
+                            type: 'variable', 
+                            value: prop
                         }
                     }
                 })
@@ -68,9 +112,19 @@ export default class VegtexScope {
                         // Method
                         else if(target[name].type === 'method')
                             return target[name].method.bind(this.props)
+                        // Variable
+                        else if(target[name].type === 'variable')
+                            return target[name].value
                     },
                     set: (target, name, value) => {
-                        return false
+                        // Variable
+                        if(target[name].type === 'variable') {
+                            target[name].value = value
+                            return true
+                        }
+                        // Reference / Method
+                        else
+                            return false
                     }
                 })
             })
