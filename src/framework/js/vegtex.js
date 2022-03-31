@@ -5,6 +5,7 @@ import '../css/all.scss'
 import VegtexComponent from './VegtexComponent.js'
 import VegtexStyle from './VegtexStyle.js'
 import VegtexGlobals from './VegtexGlobals'
+import VegtexScope from './VegtexScope'
 
 // Components: Base
 import { Card } from './components/Card'
@@ -48,5 +49,5 @@ export default {
     createRouter,
 
     // Base classes
-    VegtexComponent, VegtexStyle, VegtexGlobals
+    VegtexComponent, VegtexStyle, VegtexGlobals, VegtexScope
 }
