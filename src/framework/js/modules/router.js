@@ -5,11 +5,15 @@ export function createRouter(routes, options) {
     VegtexGlobals.set('router', {
         mode: options?.mode || 'multipage',
 
+        current: null,
         navigate(page) {
             // SPA mode
             if(this.mode === 'spa') {
-                const routerView = VegtexGlobals.get('routerView')
-                routerView.state.page = page
+                this.current = page
+                
+                // Set page in view
+                if(VegtexGlobals.exists('routerView'))
+                    VegtexGlobals.get('routerView').state.page = page
             }
             // Multipage mode
             else if(this.mode === 'multipage')
@@ -33,6 +37,11 @@ export function createRouter(routes, options) {
         style: options?.viewStyle,
         events: {
             __added__() {
+                // Set current router page
+                if(VegtexGlobals.exists('router'))
+                    VegtexGlobals.get('router').current = this.state.page
+
+                // Set global router-view
                 if(!VegtexGlobals.exists('routerView'))
                     VegtexGlobals.set('routerView', this)
                 else
@@ -47,6 +56,11 @@ export function createRouter(routes, options) {
             }
         },
         events: {
+            __added__() {
+                // If this link is to current page
+                if(this.state.to == VegtexGlobals.get('router')?.current)
+                    this.setAttribute('active', '')
+            },
             click() {
                 if(VegtexGlobals.exists('router'))
                     VegtexGlobals.get('router').navigate(this.state.to)

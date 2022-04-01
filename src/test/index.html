@@ -127,9 +127,9 @@
 
             <button size-lg style-accent>Buy</button>
 
-            <vg-alert style-warning>
-                Hello its error
-            </vg-alert>
+            <router-view></router-view>
+            <router-link to="index">index</router-link>
+            <router-link to="info">info</router-link>
         </main>
 
         <script src="<%= htmlWebpackPlugin.files.js %>"></script>
