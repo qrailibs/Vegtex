@@ -40,22 +40,20 @@ export default class VegtexStyle {
     * @static
     */
     static Style() {
-        const vars = VegtexStyle.variables()
-
         // Values templates for props
         const colorValues = (prop) => ({
-            color0: val(prop, vars.color0),
-            color1: val(prop, vars.color1),
-            color2: val(prop, vars.color2),
-            color3: val(prop, vars.color3),
-            color4: val(prop, vars.color4),
-            color5: val(prop, vars.color5),
-            color6: val(prop, vars.color6),
-            color7: val(prop, vars.color7),
-            color8: val(prop, vars.color8),
-            color9: val(prop, vars.color9),
-            color10: val(prop, vars.color10),
-            color11: val(prop, vars.color11),
+            color0: val(prop, 'var(--color-0)'),
+            color1: val(prop, 'var(--color-1)'),
+            color2: val(prop, 'var(--color-2)'),
+            color3: val(prop, 'var(--color-3)'),
+            color4: val(prop, 'var(--color-4)'),
+            color5: val(prop, 'var(--color-5)'),
+            color6: val(prop, 'var(--color-6)'),
+            color7: val(prop, 'var(--color-7)'),
+            color8: val(prop, 'var(--color-8)'),
+            color9: val(prop, 'var(--color-9)'),
+            color10: val(prop, 'var(--color-10)'),
+            color11: val(prop, 'var(--color-11)'),
 
             transparent: val(prop, 'transparent'),
             black: val(prop, 'black'),
@@ -195,7 +193,7 @@ export default class VegtexStyle {
             Rounding: {
                 ...unitValues('border-radius'),
                 
-                Default: val('border-radius', vars.borderRadius)
+                Default: val('border-radius', 'var(--border-radius)')
             },
 
             // Other
