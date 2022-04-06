@@ -77,9 +77,13 @@ export default class VegtexScope {
                                     else
                                         scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
                                 }
-                                // Reference
+                                // HTML Event
                                 else if(events.includes(scopeAttr)) {
                                     scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
+                                }
+                                // Custom HTML Event
+                                else if(scopeAttr == 'added') {
+                                    this.props[value]({ target: scopeEl })
                                 }
                             }
                         }
