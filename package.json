@@ -1,6 +1,6 @@
 {
   "name": "vegtex",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "HTML Framework for easier and faster development of beautiful websites.",
   "main": "dist/index.js",
   "files": [
