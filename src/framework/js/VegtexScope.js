@@ -52,45 +52,6 @@ export default class VegtexScope {
                 this.element = document.querySelector(scopeElementSelector)
                 this.props = {}
 
-                // Loop scope elements
-                const iterateChilds = (el) => {
-                    for(const scopeEl of el.children) {
-                        iterateChilds(scopeEl)
-                        
-                        // Loop attributes
-                        for(const { name, value } of scopeEl.attributes) {
-                            // Is scope handled
-                            if(name.startsWith('@')) {
-                                let scopeAttr = name.replace('@', '')
-    
-                                // Event
-                                if(scopeAttr === 'ref') {
-                                    this.props[value] = { 
-                                        type: 'ref',
-                                        ref: value
-                                    }
-                                }
-                                // Binding
-                                else if(scopeAttr === 'bind') {
-                                    if(scopeEl.tagName === 'INPUT' || scopeEl.tagName === 'TEXTAREA')
-                                        scopeEl.addEventListener('input', (e) => this.props[value] = e.target.value)
-                                    else
-                                        scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
-                                }
-                                // HTML Event
-                                else if(events.includes(scopeAttr)) {
-                                    scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
-                                }
-                                // Custom HTML Event
-                                else if(scopeAttr == 'added') {
-                                    this.props[value]({ target: scopeEl })
-                                }
-                            }
-                        }
-                    }
-                }
-                iterateChilds(this.element)
-                
                 // Make props (refs, methods)
                 Object.keys(props).forEach(propKey => {
                     let prop = props[propKey]
@@ -136,6 +97,45 @@ export default class VegtexScope {
                             return false
                     }
                 })
+                
+                // Loop scope elements
+                const iterateChilds = (el) => {
+                    for(const scopeEl of el.children) {
+                        iterateChilds(scopeEl)
+                        
+                        // Loop attributes
+                        for(const { name, value } of scopeEl.attributes) {
+                            // Is scope handled
+                            if(name.startsWith('@')) {
+                                let scopeAttr = name.replace('@', '')
+    
+                                // Event
+                                if(scopeAttr === 'ref') {
+                                    this.props[value] = { 
+                                        type: 'ref',
+                                        ref: value
+                                    }
+                                }
+                                // Binding
+                                else if(scopeAttr === 'bind') {
+                                    if(scopeEl.tagName === 'INPUT' || scopeEl.tagName === 'TEXTAREA')
+                                        scopeEl.addEventListener('input', (e) => this.props[value] = e.target.value)
+                                    else
+                                        scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
+                                }
+                                // HTML Event
+                                else if(events.includes(scopeAttr)) {
+                                    scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
+                                }
+                                // Custom HTML Event
+                                else if(scopeAttr == 'added') {
+                                    this.props[value]({ target: scopeEl })
+                                }
+                            }
+                        }
+                    }
+                }
+                iterateChilds(this.element)
             })
     }
 }
