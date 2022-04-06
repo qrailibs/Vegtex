@@ -51,53 +51,10 @@ export default class VegtexScope {
                 // Element for scope
                 this.element = document.querySelector(scopeElementSelector)
                 this.props = {}
-
-                // Make props (refs, methods)
-                Object.keys(props).forEach(propKey => {
-                    let prop = props[propKey]
-
-                    // Method
-                    if(typeof prop === 'function') {
-                        this.props[propKey] = { 
-                            type: 'method', 
-                            method: prop
-                        }
-                    }
-                    // Variable
-                    else {
-                        this.props[propKey] = { 
-                            type: 'variable', 
-                            value: prop
-                        }
-                    }
-                })
-                this.props = new Proxy(this.props, {
-                    get: (target, name) => {
-                        // Not found
-                        if(!target[name])
-                            return undefined
-                        // Reference
-                        else if(target[name].type === 'ref')
-                            return this.element.querySelector(`[\\@ref="${target[name].ref}"]`)
-                        // Method
-                        else if(target[name].type === 'method')
-                            return target[name].method.bind(this.props)
-                        // Variable
-                        else if(target[name].type === 'variable')
-                            return target[name].value
-                    },
-                    set: (target, name, value) => {
-                        // Variable
-                        if(target[name].type === 'variable') {
-                            target[name].value = value
-                            return true
-                        }
-                        // Reference / Method
-                        else
-                            return false
-                    }
-                })
                 
+                // When props will be initialized
+                const onInit = []
+
                 // Loop scope elements
                 const iterateChilds = (el) => {
                     for(const scopeEl of el.children) {
@@ -124,18 +81,67 @@ export default class VegtexScope {
                                         scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
                                 }
                                 // HTML Event
-                                else if(events.includes(scopeAttr)) {
+                                else if(events.includes(scopeAttr))
                                     scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
-                                }
-                                // Custom HTML Event
-                                else if(scopeAttr == 'added') {
-                                    this.props[value]({ target: scopeEl })
-                                }
+                                // Custom HTML Event 'added' (Call event when initialized)
+                                else if(scopeAttr == 'added')
+                                    onInit.push(() => this.props[value]({ target: scopeEl }))
                             }
                         }
                     }
                 }
                 iterateChilds(this.element)
+
+                // Make props (refs, methods)
+                Object.keys(props).forEach(propKey => {
+                    let prop = props[propKey]
+
+                    // Method
+                    if(typeof prop === 'function') {
+                        this.props[propKey] = { 
+                            type: 'method', 
+                            method: prop
+                        }
+                    }
+                    // Variable
+                    else {
+                        this.props[propKey] = { 
+                            type: 'variable', 
+                            value: prop
+                        }
+                    }
+                })
+                this.props = new Proxy(this.props, {
+                    get: (target, name) => {
+                        // Not found
+                        if(!target[name])
+                            return undefined
+                        // Reference
+                        else if(target[name]?.type === 'ref')
+                            return this.element.querySelector(`[\\@ref="${target[name].ref}"]`)
+                        // Method
+                        else if(target[name]?.type === 'method')
+                            return target[name].method.bind(this.props)
+                        // Variable
+                        else if(target[name]?.type === 'variable')
+                            return target[name].value
+                        else
+                            return null
+                    },
+                    set: (target, name, value) => {
+                        // Variable
+                        if(target[name]?.type === 'variable') {
+                            target[name].value = value
+                            return true
+                        }
+                        // Reference / Method
+                        else
+                            return false
+                    }
+                })
+
+                // Call onInit
+                onInit.forEach(handler => handler())
             })
     }
 }
