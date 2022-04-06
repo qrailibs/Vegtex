@@ -51,9 +51,8 @@ export default class VegtexScope {
                 // Element for scope
                 this.element = document.querySelector(scopeElementSelector)
                 this.props = {}
-                
-                // When props will be initialized
-                const onInit = []
+                this.onInit = []
+                this.onChange = {}
 
                 // Loop scope elements
                 const iterateChilds = (el) => {
@@ -80,12 +79,28 @@ export default class VegtexScope {
                                     else
                                         scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
                                 }
+
+                                // Inner text on change
+                                else if(scopeAttr === 'text') {
+                                    this.onInit.push(() => this.props[value] ? (scopeEl.innerText = newVal) : void 0)
+
+                                    // Set inner Text
+                                    this.onChange[value] = (newVal) => scopeEl.innerText = newVal
+                                }
+                                // Inner text on change
+                                else if(scopeAttr === 'html') {
+                                    this.onInit.push(() => this.props[value] ? (scopeEl.innerHTML = newVal) : void 0)
+                                    
+                                    // Set inner HTML
+                                    this.onChange[value] = (newVal) => scopeEl.innerHTML = newVal
+                                }
+
                                 // HTML Event
                                 else if(events.includes(scopeAttr))
                                     scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
                                 // Custom HTML Event 'added' (Call event when initialized)
                                 else if(scopeAttr == 'added')
-                                    onInit.push(() => this.props[value]({ target: scopeEl }))
+                                    this.onInit.push(() => this.props[value]({ target: scopeEl }))
                             }
                         }
                     }
@@ -132,6 +147,10 @@ export default class VegtexScope {
                         // Variable
                         if(target[name]?.type === 'variable') {
                             target[name].value = value
+
+                            if(this.onChange[name])
+                                this.onChange[name](value)
+
                             return true
                         }
                         // Reference / Method
@@ -141,7 +160,7 @@ export default class VegtexScope {
                 })
 
                 // Call onInit
-                onInit.forEach(handler => handler())
+                this.onInit.forEach(handler => handler())
             })
     }
 }

@@ -127,9 +127,10 @@
 
             <button size-lg style-accent>Buy</button>
 
-            <router-view></router-view>
-            <router-link to="index">index</router-link>
-            <router-link to="info">info</router-link>
+            <div @scope="my-scope">
+                <p @text="text"></p>
+                <button @click="setText">Поставить текст</button>
+            </div>
         </main>
 
         <script src="<%= htmlWebpackPlugin.files.js %>"></script>

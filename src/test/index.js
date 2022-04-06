@@ -9,3 +9,11 @@ const routes = {
 vegtex.createRouter(routes, {
     mode: 'spa'
 })
+
+new vegtex.VegtexScope('my-scope', {
+    text: null,
+
+    setText() {
+        this.text = 'Hello!'
+    }
+})
