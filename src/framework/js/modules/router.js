@@ -6,6 +6,8 @@ export function createRouter(routes, options) {
         mode: options?.mode || 'multipage',
 
         current: null,
+        middleware: options?.middleware,
+
         navigate(page) {
             // SPA mode
             if(this.mode === 'spa') {
@@ -18,6 +20,9 @@ export function createRouter(routes, options) {
             // Multipage mode
             else if(this.mode === 'multipage')
                 window.location = `${window.location.pathname}?page=${page}`
+
+            // Call middleware (page, navigate)
+            this.middleware?.(page, this.navigate)
         }
     })
 

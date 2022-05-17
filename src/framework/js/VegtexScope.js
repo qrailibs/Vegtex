@@ -57,6 +57,10 @@ export default class VegtexScope {
                 // Loop scope elements
                 const iterateChilds = (el) => {
                     for(const scopeEl of el.children) {
+                        // Ignore foreach-item
+                        if(scopeEl.hasAttribute('@foreach-item'))
+                            break
+                        
                         iterateChilds(scopeEl)
                         
                         // Loop attributes
@@ -80,6 +84,31 @@ export default class VegtexScope {
                                         scopeEl.addEventListener('change', (e) => this.props[value] = e.target.value)
                                 }
 
+                                // Conditions
+                                //TODO: @if, @show
+
+                                // Looping
+                                else if(scopeAttr === 'foreach-for') {
+                                    const onValue = (val) => {
+                                        const foreachTemplateEl = scopeEl.querySelector('[\\@foreach-item]')
+                                        if(foreachTemplateEl) {
+                                            foreachTemplateEl.style.display = none
+                                        }
+                                        else
+                                            throw new Error(`Failed to construct foreach in scope, not found @foreach-item (for:${scopeEl})`)
+
+                                        // Do looping
+                                        if(val && Array.isArray(val) && foreachTemplateEl) {
+                                            val.forEach(item => {
+
+                                            })
+                                        }
+                                    }
+                                    
+                                    this.onInit.push(() => onValue(this.props[value]))
+                                    this.onChange[value] = onValue
+                                }
+
                                 // Inner text on change
                                 else if(scopeAttr === 'text') {
                                     this.onInit.push(() => this.props[value] ? (scopeEl.innerText = newVal) : void 0)
@@ -90,7 +119,7 @@ export default class VegtexScope {
                                 // Inner text on change
                                 else if(scopeAttr === 'html') {
                                     this.onInit.push(() => this.props[value] ? (scopeEl.innerHTML = newVal) : void 0)
-                                    
+
                                     // Set inner HTML
                                     this.onChange[value] = (newVal) => scopeEl.innerHTML = newVal
                                 }
@@ -98,9 +127,14 @@ export default class VegtexScope {
                                 // HTML Event
                                 else if(events.includes(scopeAttr))
                                     scopeEl.addEventListener(scopeAttr, (e) => this.props[value](e))
+
                                 // Custom HTML Event 'added' (Call event when initialized)
                                 else if(scopeAttr == 'added')
                                     this.onInit.push(() => this.props[value]({ target: scopeEl }))
+
+                                // Unknown
+                                else
+                                    throw new Error(`Unknown scope attribute '${scopeAttr}="${value}"'`)
                             }
                         }
                     }

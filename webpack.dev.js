@@ -11,6 +11,10 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: "vegtex.[chunkhash].js",
     },
+    devServer: {
+        compress: true,
+        port: 9000
+    },
     module: {
         rules: [
             {
