@@ -2,6 +2,11 @@ import VegtexComponent from "../VegtexComponent"
 import VegtexGlobals from "../VegtexGlobals"
 
 export function createRouter(routes, options) {
+    // Check arguments (Routes should be Array<VegtexComponent>)
+    if(!Array.isArray(routes) || routes.reduce((_,b) => b instanceof VegtexComponent ? 0 : 1) > 0)
+        throw new Error('Routes should be passed as array of VegtexComponent')
+
+    // Set global router object
     VegtexGlobals.set('router', {
         mode: options?.mode || 'multipage',
 
@@ -26,6 +31,7 @@ export function createRouter(routes, options) {
         }
     })
 
+    // Make <router-view>
     new VegtexComponent('router-view', {
         state: () => ({
             // Current page name
@@ -33,11 +39,28 @@ export function createRouter(routes, options) {
             // All available pages (routes)
             pages: routes
         }),
-        template() { 
+        template() {
+            const getRouteHTML = (route) => {
+                if(typeof route === 'string')
+                    return route
+                else if(route instanceof VegtexComponent)
+                    return route.use(null, {})
+            }
+
+            let finalHTML = ''
+
+            // Route found
+            if(this.state.pages[this.state.page])
+                finalHTML = getRouteHTML(this.state.pages[this.state.page])
+            // Route not found && Has 404 route
+            else if(this.state.pages['404'])
+                finalHTML = getRouteHTML(this.state.pages['404'])
+            // Route not found (Dont has 404 route)
+            else
+                finalHTML = `<p>Error: page '${this.state.page}' not found, 404 page was not defined.</p>`
+
             // Return HTML of current page
-            return this.state.pages[this.state.page]
-                || this.state.pages['404']
-                || `<p>Error: page '${this.state.page}' not found, 404 page was not defined.</p>`
+            return finalHTML
         },
         style: options?.viewStyle,
         events: {
@@ -54,6 +77,8 @@ export function createRouter(routes, options) {
             }
         }
     })
+
+    // Make <router-link>
     new VegtexComponent('router-link', {
         state() {
             return {
@@ -88,3 +113,12 @@ export function createRouter(routes, options) {
         }))
     })
 }
+
+//TODO: class VegtexRouter instead of createRouter()
+/*
+export default class VegtexRouter {
+    constructor(routes, options) {
+
+    }
+}
+*/

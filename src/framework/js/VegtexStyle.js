@@ -30,6 +30,13 @@ export default class VegtexStyle {
 
             transition: style.getPropertyValue('--transition'),
 
+            textSizeRegular: style.getPropertyValue('--text-size-regular'),
+            textSizeSubtitle: style.getPropertyValue('--text-size-subtitle'),
+            textSizeButton: style.getPropertyValue('--text-size-button'),
+            textSizeMiniButton: style.getPropertyValue('--text-size-minibutton'),
+            textSizeDescription: style.getPropertyValue('--text-size-description'),
+            textSizeMiniDescription: style.getPropertyValue('--text-size-minidescription'),
+
             //TODO: text sizes, shadows, transition, fonts
         }
     }
@@ -64,6 +71,9 @@ export default class VegtexStyle {
             rgba: (r, g, b, a) => val(prop, `rgba(${r}, ${g}, ${b}, ${a})`),
             hex: (hexCode) => val(prop, `#${hexCode}`)
         })
+        const fontSizeValues = (prop) => ({
+            // TODO: text size variables, unit values
+        })
         const unitValues = (prop) => ({
             px: (value) => val(prop, `${value}px`),
             rem: (value) => val(prop, `${value}rem`),
@@ -85,6 +95,11 @@ export default class VegtexStyle {
             Bottom: unitValues(`${prop}-bottom`),
 
             All: unitValues(prop)
+        })
+        const borderStyleValues = (prop) => ({
+            Solid: val(prop, 'solid'),
+            Dashed: val(prop, 'dashed'),
+            Dotted: val(prop, 'dotted'),
         })
 
         // Create value
@@ -190,10 +205,32 @@ export default class VegtexStyle {
             Gap: valCollection('gap', [unitValues]),
 
             //Border
+            Border: {
+                Top: valCollection('border-top-width', [unitValues]),
+                Bottom: valCollection('border-bottom-width', [unitValues]),
+                Left: valCollection('border-left-width', [unitValues]),
+                Right: valCollection('border-right-width', [unitValues]),
+                All: valCollection('border-width', [unitValues]),
+
+                Color: valCollection('border-color', [colorValues]),
+                Type: valCollection('border-style', [borderStyleValues])
+            },
             Rounding: {
                 ...unitValues('border-radius'),
                 
                 Default: val('border-radius', 'var(--border-radius)')
+            },
+
+            // Outline
+            Outline: {
+                Top: valCollection('outline-top-width', [unitValues]),
+                Bottom: valCollection('outline-bottom-width', [unitValues]),
+                Left: valCollection('outline-left-width', [unitValues]),
+                Right: valCollection('outline-right-width', [unitValues]),
+                All: valCollection('outline-width', [unitValues]),
+
+                Color: valCollection('outline-color', [colorValues]),
+                Type: valCollection('outline-style', [borderStyleValues])
             },
 
             // Other
@@ -237,26 +274,38 @@ export default class VegtexStyle {
     css(selector) {
         let css = ''
 
-        const states = this.propsCallback(VegtexStyle.Style())
-        Object.keys(states).forEach(stateName => {
-            let finalSelector = `${selector}${stateName.replaceAll(':host', '')}`
-
-            /*
-                // Additional
-                for(const propName of Object.keys(this.additionalProps)) {
-                    rulesCss += `\n    ${propName.replaceAll('_','-')}: ${this.additionalProps[propName]};`
-                }
-            */
-
+        const props = this.propsCallback(VegtexStyle.Style())
+        // One state(base) style
+        if(Array.isArray(props)) {
             // If not empty
-            if(states[stateName].length > 0) {
-                css += `${finalSelector} {`
-                states[stateName].forEach(propCss => {
+            if(props.length > 0) {
+                css += `${selector} {`
+                props.forEach(propCss => {
                     css += propCss
                 })
                 css += `}`
             }
-        })
+        }
+        // Multiple states style
+        else if(typeof props === 'object') {
+            // Loop all states
+            Object.keys(props).forEach(stateName => {
+                let finalSelector = `${selector}${stateName.replaceAll(':host', '')}`
+    
+                // If not empty
+                if(props[stateName].length > 0) {
+                    css += `${finalSelector} {`
+                    props[stateName].forEach(propCss => {
+                        css += propCss
+                    })
+                    css += `}`
+                }
+            })
+        }
+        // Unknown mode
+        else {
+            throw new Error(`Invalid style callback value (${props})`)
+        }
 
         return css
     }

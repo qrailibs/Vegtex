@@ -2,24 +2,6 @@ import VegtexStyle from "./VegtexStyle"
 
 export default class VegtexComponent {
     /**
-     * Create multiple components
-     * @param {Array.<string>} tags - components names
-     */
-    static createMultiple(tags) {
-        if(tags && Array.isArray(tags)) {
-            let components = []
-
-            tags.forEach(tag => {
-                components.push(new VegtexComponent(tag))
-            })
-
-            return components
-        }
-        else
-            throw new Error('Components tags was not passed')
-    }
-
-    /**
      * Callback for observing attribute
      * @name attrCallback
      * @function
@@ -61,7 +43,7 @@ export default class VegtexComponent {
      */
     constructor(tag, data) {
         // HTML tag of component
-        this.tag = tag
+        this.tag = tag || this.#generateTag()
 
         // HTML & Custom events on component
         this.events = {}
@@ -72,8 +54,12 @@ export default class VegtexComponent {
         }
 
         // CSS style of component
-        this.style = data?.style && typeof data.style === 'function' 
-            ? new VegtexStyle(data.style) : null
+        if(data?.style && typeof data?.style === 'function')
+            this.style = new VegtexStyle(data.style)
+        else if(data?.style && typeof data?.style === 'string')
+            this.style = data.style
+        else
+            this.style = null
 
         // State (Methods, Variables)
         this.initialState = data?.state || (() => ({}))
@@ -85,14 +71,25 @@ export default class VegtexComponent {
         this.renderWay = data?.renderWay || VegtexComponent.renderWays.dom
 
         // Init in DOM
-        this.__initTag__()
+        this.#initTag()
     }
 
-    use(inner = ``, attributes = {}) {
+    #generateTag() {
+        const length = 7
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789-'
+
+        let randomChars = ''
+        for (let i = 0; i < length; i++ ) {
+            randomChars += chars.charAt(Math.floor(Math.random() * chars.length))
+        }
+        return `vg-${randomChars}`
+    }
+
+    use(slot = ``, attributes = {}) {
         return `<${this.tag} 
             ${Object.keys(attributes).map((attrName) => `${attrName}="${attributes[attrName]}"`).join(' ')}
         >
-            ${inner}
+            ${slot || ''}
         </${this.tag}>`
     }
 
@@ -140,7 +137,7 @@ export default class VegtexComponent {
      * Initialize HTML tag of component
      * @private
      */
-    __initTag__() {
+    #initTag() {
         const component = this;
 
         //define WebComponent
@@ -157,8 +154,16 @@ export default class VegtexComponent {
                     this.$initialInner = this.innerHTML
                     this.$initialOuter = this.outerHTML
 
-                    //inititial values of locals (methods, properties)
-                    let newState = component.initialState.bind(this)()
+                    //make state object
+                    let newState = {}
+                    if(typeof component.initialState === 'function')
+                        newState = component.initialState.bind(this)()
+                    else if(typeof component.initialState === 'object')
+                        newState = component.initialState
+                    else
+                        throw new Error('VegtexComponent should be of function or object type')
+
+                    //set observable state
                     this.state = new Proxy(newState, {
                         get: (target, name) => {
                             return target[name]
@@ -182,17 +187,17 @@ export default class VegtexComponent {
                     })
                     
                     //init
-                    this.$component.__initInstance__(this)
+                    this.$component.#initInstance(this)
 
                     //attach shadow dom
-                    this.$component.__attachShadow__(this)
+                    this.$component.#attachShadow(this)
                     
                     //render
-                    this.$component.__renderInstance__(this)
+                    this.$component.#renderInstance(this)
                 }
 
                 render() {
-                    this.$component.__renderInstance__(this)
+                    this.$component.#renderInstance(this)
                 }
 
                 connectedCallback() {
@@ -247,7 +252,7 @@ export default class VegtexComponent {
      * @private
      * @param {Object} instance - DOM element instance to initialize
      */
-    __initInstance__(instance) {
+    #initInstance(instance) {
         //observe events
         for(let event_name in this.events) {
             //if its default event (not nondefault like '__adopted__', etc)
@@ -266,7 +271,7 @@ export default class VegtexComponent {
      * Attach shadow to connected instance
      * @param {Object} instance - DOM element instance
      */
-    __attachShadow__(instance) {
+    #attachShadow(instance) {
         const shadowMode = 'open'
 
         //use shadow dom only if required (for style or rendering)
@@ -277,7 +282,7 @@ export default class VegtexComponent {
      * Render html into 
      * @param {Object} instance - DOM element instance
      */
-    __renderShadow__(instance, html) {
+    #renderShadow(instance, html) {
         //create template
         let templateEl = document.createElement('template')
         templateEl.innerHTML = html
@@ -288,12 +293,13 @@ export default class VegtexComponent {
         //render template to shadow dom
         instance.shadow.appendChild(templateEl)
     }
+
     /**
      * Render instance of component
      * @private
      * @param {Object} instance - DOM element instance to render
      */
-    __renderInstance__(instance) {
+    #renderInstance(instance) {
         //before render event
         this.emit(VegtexComponent.events.beforeRender, instance)
         
@@ -314,7 +320,7 @@ export default class VegtexComponent {
             }
             //shadow DOM
             else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
-                this.__renderShadow__(instance, `
+                this.#renderShadow(instance, `
                     ${this.style ? `<style>${this.style.css}</style>` : ''}
                     ${rendered}
                 `)
@@ -325,7 +331,7 @@ export default class VegtexComponent {
         }
         //shadow rendering initial
         else if(this.renderWay == VegtexComponent.renderWays.shadowDom) {
-            this.__renderShadow__(instance, `
+            this.#renderShadow(instance, `
                 ${this.style ? `<style>${this.style.css}</style>` : ''}
                 ${instance.$initialInner}
             `)
