@@ -33,6 +33,8 @@
   },
   "homepage": "https://github.com/Proxymal/Vegtex",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.17.12",
+    "@babel/plugin-proposal-private-methods": "^7.17.12",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.7.0",
