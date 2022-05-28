@@ -25,7 +25,7 @@ export default new class {
      * @param {Object} globalValue
      */
     set(globalName, globalValue) {
-        if(window$.$globals)
+        if(window.$globals)
             window.$globals[globalName] = globalValue
         else
             throw new Error(`Failed to set global '${globalName}', you should do vegtex.use before`)

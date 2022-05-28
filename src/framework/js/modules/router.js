@@ -2,9 +2,9 @@ import VegtexComponent from "../VegtexComponent"
 import VegtexGlobals from "../VegtexGlobals"
 
 export function createRouter(routes, options) {
-    // Check arguments (Routes should be Array<VegtexComponent>)
-    if(!Array.isArray(routes) || routes.reduce((_,b) => b instanceof VegtexComponent ? 0 : 1) > 0)
-        throw new Error('Routes should be passed as array of VegtexComponent')
+    // Check arguments
+    if(!routes)
+        throw new Error('Routes was not passed')
 
     // Set global router object
     VegtexGlobals.set('router', {

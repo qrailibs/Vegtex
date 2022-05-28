@@ -1,11 +1,18 @@
 import vegtex from '../framework/js/vegtex'
 
+import dashboard from './views/dashboard.js'
+import messages from './views/messages.js'
+
 vegtex.use('dark', 'azure')
 
 const routes = {
-    index: '<p> index page </p>',
-    info: '<p> info page </p>'
+    index: dashboard,
+    messages: messages,
 }
+
 vegtex.createRouter(routes, {
-    mode: 'spa'
+    mode: 'spa',
+
+    // No style
+    linkStyle: (Style) => []
 })
