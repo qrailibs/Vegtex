@@ -200,6 +200,17 @@ export default class VegtexStyle {
                 Center: val('justify-content', 'center'),
                 End: val('justify-content', 'flex-end')
             },
+            SelfCentered: val('align-self', 'center') + val('justify-self', 'center') + val('margin', 'auto'),
+            SelfAlign: {
+                Start: val('align-self', 'flex-start'),
+                Center: val('align-self', 'center'),
+                End: val('align-self', 'flex-end')
+            },
+            SelfJustify: {
+                Start: val('justify-self', 'flex-start'),
+                Center: val('justify-self', 'center'),
+                End: val('justify-self', 'flex-end')
+            },
 
             // Gap
             Gap: valCollection('gap', [unitValues]),
@@ -213,7 +224,9 @@ export default class VegtexStyle {
                 All: valCollection('border-width', [unitValues]),
 
                 Color: valCollection('border-color', [colorValues]),
-                Type: valCollection('border-style', [borderStyleValues])
+                Type: valCollection('border-style', [borderStyleValues]),
+
+                None: val('border', 'none')
             },
             Rounding: {
                 ...unitValues('border-radius'),
@@ -230,7 +243,9 @@ export default class VegtexStyle {
                 All: valCollection('outline-width', [unitValues]),
 
                 Color: valCollection('outline-color', [colorValues]),
-                Type: valCollection('outline-style', [borderStyleValues])
+                Type: valCollection('outline-style', [borderStyleValues]),
+
+                None: val('outline', 'none')
             },
 
             // Other

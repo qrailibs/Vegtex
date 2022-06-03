@@ -1,10 +1,34 @@
 import vegtex from '../../framework/js/vegtex'
 const { VegtexComponent } = vegtex 
 
+import '../components/VariantSwitcher'
+
 export default new VegtexComponent(null, {
+    state() {
+        return {
+            sizes: [
+                {
+                    title: 'Large',
+                    element: `<button is='vg-button' size-lg style-accent>Button</button>`
+                },
+                {
+                    title: 'Medium',
+                    element: `<button is='vg-button' size-md style-accent>Button</button>`
+                },
+                {
+                    title: 'Small',
+                    element: `<button is='vg-button' size-sm style-accent>Button</button>`
+                },
+                {
+                    title: 'Extra small',
+                    element: `<button is='vg-button' size-xs style-accent>Button</button>`
+                }
+            ],
+        }
+    },
     template() {
-        return `
-            <h2>Heading 2</h2>
+        return /*html*/`
+            <h2>Sizes</h2>
 
             <vg-card size-lg>
                 <div card-header>
@@ -19,8 +43,8 @@ export default new VegtexComponent(null, {
                     </vg-icon>
                 </div>
                 <div card-body>
-                    <p card-title>$540</p>
-                    <p card-text>Spend this week</p>
+                    <p card-title>Title</p>
+                    <p card-text>Description</p>
                 </div>
                 <div card-footer>
                     <vg-progress>
@@ -30,8 +54,8 @@ export default new VegtexComponent(null, {
             </vg-card>
             <vg-card size-md>
                 <div card-header>
-                    <p card-text>Spend this week</p>
-                    <p card-title>$540</p>
+                    <p card-title>Title</p>
+                    <p card-text>Description</p>
                 </div>
                 <div card-body>
                     <vg-icon-stack>
@@ -78,8 +102,8 @@ export default new VegtexComponent(null, {
                     </vg-icon>
                 </div>
                 <div card-body>
-                    <p card-title>$27,632</p>
-                    <p card-text>Last transfer</p>
+                    <p card-title>Title</p>
+                    <p card-text>Description</p>
                 </div>
             </vg-card>
             <vg-card size-xs>
@@ -95,12 +119,12 @@ export default new VegtexComponent(null, {
                     </vg-icon>
                 </div>
                 <div card-body>
-                    <p card-title>$27,632</p>
-                    <p card-text>Last transfer</p>
+                    <p card-title>Title</p>
+                    <p card-text>Description</p>
                 </div>
             </vg-card>
 
-            <button size-lg style-accent>Buy</button>
+            <button is="vg-button" type="submit" size-lg style-accent>Buy</button>
         `
     }
 })

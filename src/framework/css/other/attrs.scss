@@ -1,0 +1,12 @@
+[vg-exists="false"], [vg-exists="undefined"], [vg-exists="null"], [vg-exists="0"] {
+    display: none;
+}
+
+[vg-visible="false"] {
+    visibility: hidden;
+    opacity: 0;
+}
+[vg-visible="true"] {
+    visibility: visible;
+    opacity: 1;
+}

@@ -45,6 +45,11 @@ export default class VegtexComponent {
         // HTML tag of component
         this.tag = tag || this.#generateTag()
 
+        // Base HTML element
+        this.extends = data?.extends
+        if(this.extends && (!this.extends.el || !this.extends.tag))
+            throw new Error('The extends value should be object with "el" and "tag" properties (For example: { el: HTMLButtonElement, tag: "button" })')
+
         // HTML & Custom events on component
         this.events = {}
         if(data?.events) {
@@ -52,6 +57,13 @@ export default class VegtexComponent {
                 this.addEventListener(eventName, data.events[eventName])
             )
         }
+
+        // HTML Properties
+        this.props = []
+        if(data?.props && typeof data.props === 'function')
+            this.props = data.props()
+        else if(data?.props && Array.isArray(data.props))
+            this.props = data.props
 
         // CSS style of component
         if(data?.style && typeof data?.style === 'function')
@@ -100,17 +112,15 @@ export default class VegtexComponent {
      * @enum {string}
      */
     static get events() {
-        return {
-            beforeRender: '__beforerender__',
-            afterRender: '__afterrender__',
-
-            added: '__added__',
-            removed: '__removed__',
-            adopted: '__adopted__',
-            initialized: '__init__',
-
-            defined: '__defined__'
-        }
+        return [
+            'defined',
+            'created',
+            'mounted',
+            'unmounted',
+            'adopted',
+            'render',
+            'prerender'
+        ]
     }
     addEventListener(event, handler) {
         // Init event handlers
@@ -121,8 +131,6 @@ export default class VegtexComponent {
         this.events[event].push(handler)
     }
     emit(event, instance, e = null) {
-        //const context = this.__makeContext__(instance)
-
         // Is event handlers exists
         if(this.events[event]) 
             // Call each handler
@@ -138,17 +146,27 @@ export default class VegtexComponent {
      * @private
      */
     #initTag() {
-        const component = this;
+        const component = this
 
         //define WebComponent
-        window.customElements.define(component.tag.toLowerCase(), 
-            class VegtexElement extends HTMLElement {
+        window.customElements.get(component.tag.toLowerCase()) || window.customElements.define(component.tag.toLowerCase(), 
+            class VegtexElement extends (component.extends?.el || HTMLElement) {
                 constructor() {
                     //init
                     super()
                     
                     //component of the element
                     this.$component = component
+
+                    //init props with existing/null value
+                    this.props = {}
+                    this.$component.props?.forEach?.(propName => {
+                        const parsedValue = this.#parseProperty(propName)
+                        if(parsedValue !== undefined)
+                            this.props[propName] = parsedValue
+                        else
+                            this.props[propName] = undefined
+                    })
 
                     //initial inner nad outer html of current dom element
                     this.$initialInner = this.innerHTML
@@ -201,39 +219,52 @@ export default class VegtexComponent {
                 }
 
                 connectedCallback() {
-                    this.$component.emit(VegtexComponent.events.added, this)
+                    this.$component.emit('mounted', this)
                 }
                 disconnectedCallback() { 
-                    this.$component.emit(VegtexComponent.events.removed, this)
+                    this.$component.emit('unmounted', this)
                 }
                 adoptedCallback() { 
-                    this.$component.emit(VegtexComponent.events.adopted, this)
+                    this.$component.emit('adopted', this)
                 }
 
                 static get observedAttributes() {
-                    let observed = []
-
-                    //TODO: add globals
-
-                    return observed
+                    return component.props || []
                 }
                 attributeChangedCallback(attrName, oldVal, newVal) {
-                    // Global is exists?
-                    if(this[attrName]) {
-                        // Reassign global
-                        //this[attrName] = newVal
-                    }
+                    const parsedValue = this.#parseProperty(attrName.replace(':', ''))
+                    if(parsedValue !== undefined)
+                        this.props[attrName] = parsedValue
                 }
-            }
+
+                #parseProperty(attrName) {
+                    // Property with primitive value
+                    if(this.$component.props.includes(attrName)) {
+                        // Base attribute
+                        if(this.hasAttribute(attrName))
+                            return this.getAttribute(attrName)
+                        // Property with object(JSON) value
+                        else if(this.hasAttribute(':' + attrName)) {
+                            const rawValue = this.getAttribute(':' + attrName).replaceAll("\\'", '"')
+                            const objectValue = null
+
+                            return JSON.parse(rawValue)
+                        }
+                    }
+                    else
+                        return undefined
+                }
+            },
+            component.extends?.tag ? {extends:component.extends?.tag} : undefined
         )
 
         //call tag initialization event
-        this.emit(VegtexComponent.events.defined, null)
+        this.emit('defined', null)
 
         //style
         if(this.style) {
             if(this.style instanceof VegtexStyle) {
-                this.style.addAdditional('color', 'white')
+                //this.style.addAdditional('color', 'white')
 
                 // Is global style exists
                 if(document.getElementById('vegtex-style'))
@@ -247,6 +278,45 @@ export default class VegtexComponent {
         }
     }
 
+    #addEventListeners(instance, isOnRender) {
+        //observe events
+        for(let event_selector in this.events) {
+            //if its default event (not nondefault like '__adopted__', etc)
+            if(!VegtexComponent.events.includes(event_selector)) {
+                let selector = null, type = null
+
+                // No selector, just type
+                if(event_selector.trim().startsWith(':') || !event_selector.includes(':')) {
+                    type = event_selector.replace(':', '')
+                }
+                // With selector & type
+                else {
+                    [ selector, type ] = event_selector.split(':')
+                    selector = selector.trim().replace(':host', '')
+                }
+
+                // Fix selector
+                type = type.replaceAll(' ', '')
+
+                // Self selector
+                if(!isOnRender && selector === null || selector === '') {
+                    instance.addEventListener(type, (e) => {
+                        this.emit(event_selector, instance, e)
+                    })
+                }
+                // Advanced selector
+                else if(isOnRender) {
+                    let elements = instance.querySelectorAll(selector)
+                    elements.forEach(element => {
+                        element.addEventListener(type, (e) => {
+                            this.emit(event_selector, instance, e)
+                        })
+                    })
+                }
+            }
+        }
+    }
+
     /**
      * Initialize instance of component
      * @private
@@ -254,17 +324,10 @@ export default class VegtexComponent {
      */
     #initInstance(instance) {
         //observe events
-        for(let event_name in this.events) {
-            //if its default event (not nondefault like '__adopted__', etc)
-            if(!event_name.startsWith('__')) {
-                instance.addEventListener(event_name, (e) => {
-                    this.emit(event_name, instance, e)
-                })
-            }
-        }
+        this.#addEventListeners(instance, false)
 
         //call init event
-        this.emit(VegtexComponent.events.initialized, instance)
+        this.emit('created', instance)
     }
 
     /**
@@ -301,7 +364,7 @@ export default class VegtexComponent {
      */
     #renderInstance(instance) {
         //before render event
-        this.emit(VegtexComponent.events.beforeRender, instance)
+        this.emit('prerender', instance)
         
         //templating (JS)
         if(this.template !== undefined) {
@@ -311,8 +374,40 @@ export default class VegtexComponent {
             if(typeof this.template === 'string' && this.template.length > 0)
                 rendered = this.template
             // Function template
-            else if(typeof this.template === 'function')
-                rendered = this.template.bind(instance)() || instance.$initialInner
+            else if(typeof this.template === 'function') {
+                const context = {
+                    // Function to serialize values for html dom
+                    $(value) {
+                        const serialize = (val) => {
+                            if(typeof val === 'object')
+                                return stringify(val)
+                            else if(typeof val === 'string')
+                                return `\\'${val}\\'`
+                            else if(typeof val === 'number')
+                                return val
+                        }
+                        const stringify = (obj) => {
+                            // Array
+                            if(Array.isArray(obj)) {
+                                return `[${obj.map(val => serialize(val)).join(',')}]`
+                            }
+                            // Object
+                            else {
+                                let props = []
+                                Object.keys(obj).forEach(key => {
+                                    props.push(`\\'${key}\\':${serialize(obj[key])}`)
+                                })
+                                
+                                return `{${props.join(',')}}`
+                            }
+                        }
+
+                        return stringify(value)
+                    },
+                    ...instance
+                }
+                rendered = this.template.bind(context)() || instance.$initialInner
+            }
 
             //basic DOM
             if(this.renderWay == VegtexComponent.renderWays.dom) {
@@ -338,6 +433,9 @@ export default class VegtexComponent {
         }
 
         //after render event
-        this.emit(VegtexComponent.events.afterRender, instance)
+        this.emit('render', instance)
+
+        //observe child elements events
+        this.#addEventListeners(instance, true)
     }
 }

@@ -2,20 +2,22 @@
 import '../css/all.scss'
 
 // Base JS
-import VegtexComponent from './VegtexComponent.js'
-import VegtexStyle from './VegtexStyle.js'
+import VegtexComponent from './VegtexComponent'
+import VegtexStyle from './VegtexStyle'
 import VegtexGlobals from './VegtexGlobals'
 import VegtexScope from './VegtexScope'
 
 // Components: Base
+import { Button } from './components/Button'
 import { Card } from './components/Card'
 import { Icon } from './components/Icon'
 import { IconStack } from './components/IconStack'
 import { Badge } from './components/Badge'
 import { Alert } from './components/Alert'
 import { Progress } from './components/Progress'
-//TODO: List
+//TODO: List, Shield, etc
 import { Item } from './components/Item'
+
 // Components: SPA
 import { Sidebar } from './components/Sidebar'
 

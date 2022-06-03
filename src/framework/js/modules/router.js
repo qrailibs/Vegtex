@@ -64,7 +64,7 @@ export function createRouter(routes, options) {
         },
         style: options?.viewStyle,
         events: {
-            __added__() {
+            created() {
                 // Set current router page
                 if(VegtexGlobals.exists('router'))
                     VegtexGlobals.get('router').current = this.state.page
@@ -86,12 +86,14 @@ export function createRouter(routes, options) {
             }
         },
         events: {
-            __added__() {
+            created() {
                 // If this link is to current page
                 if(this.state.to == VegtexGlobals.get('router')?.current)
                     this.setAttribute('active', '')
             },
+
             click() {
+                console.log('navigate')
                 if(VegtexGlobals.exists('router'))
                     VegtexGlobals.get('router').navigate(this.state.to)
                 else

@@ -1,7 +1,7 @@
 //------------------------
 // BUTTON
 //------------------------
-button, .vg-button {
+button, [is="vg-button"], vg-button, .vg-button {
     @extend .noselect;
     
     width: max-content;
@@ -16,7 +16,21 @@ button, .vg-button {
 
     cursor: pointer;
 
+    gap: 6px;
+
     // Sizes
+    &[size-xl] {
+        padding: 20px 30px;
+
+        font-weight: 500;
+        font-size: 22px;
+
+        line-height: 16px;
+
+        &[type-icon] {
+            padding: 14px;
+        }
+    }
     &[size-lg] {
         padding: 16px 24px;
 
@@ -46,6 +60,18 @@ button, .vg-button {
         
         font-weight: 500;
         font-size: $text-size-minibutton;
+
+        line-height: 20px;
+
+        &[type-icon] {
+            padding: 7px;
+        }
+    }
+    &[size-xs] {
+        padding: 2px 10px;
+        
+        font-weight: 500;
+        font-size: 12px;
 
         line-height: 20px;
 
@@ -124,10 +150,10 @@ button, .vg-button {
     &[style-light-outline] {
         background-color: transparent;
         color: $color-1;
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.5);
     
         &:hover, &:focus {
-            border: 1px solid white;
+            border: 2px solid white;
         }
 
         &:disabled {
