@@ -85,8 +85,8 @@ Example SPA page with Vegtex:
     </head>
     <body spa>
         <vg-sidebar pos-left size-lg>
-            <vg-item navigate="/dashboard">Dashboard</vg-item>
-            <vg-item navigate="/messages">Messages</vg-item>
+            <router-link to="/"><vg-item>Dashboard</vg-item></router-link>
+            <router-link to="/messages"><vg-item>Messages</vg-item></router-link>
         </vg-sidebar>
 
         <script src="./js/index.js"></script>
