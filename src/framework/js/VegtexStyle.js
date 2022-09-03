@@ -62,6 +62,8 @@ export default class VegtexStyle {
             color10: val(prop, 'var(--color-10)'),
             color11: val(prop, 'var(--color-11)'),
 
+            accent: val(prop, 'var(--color-accent)'),
+
             transparent: val(prop, 'transparent'),
             black: val(prop, 'black'),
             white: val(prop, 'white'),
@@ -229,6 +231,11 @@ export default class VegtexStyle {
                 None: val('border', 'none')
             },
             Rounding: {
+                TopLeft: unitValues('border-top-left-radius'),
+                TopRight: unitValues('border-top-right-radius'),
+                BottomLeft: unitValues('border-bottom-left-radius'),
+                BottomRight: unitValues('border-bottom-right-radius'),
+
                 ...unitValues('border-radius'),
                 
                 Default: val('border-radius', 'var(--border-radius)')

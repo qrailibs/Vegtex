@@ -232,9 +232,15 @@ export default class VegtexComponent {
                     return component.props || []
                 }
                 attributeChangedCallback(attrName, oldVal, newVal) {
+                    console.log('changed',attrName, newVal)
                     const parsedValue = this.#parseProperty(attrName.replace(':', ''))
-                    if(parsedValue !== undefined)
+                    if(parsedValue !== undefined) {
+                        // Set new value
                         this.props[attrName] = parsedValue
+
+                        // Do rerender
+                        this.render()
+                    }
                 }
 
                 #parseProperty(attrName) {
@@ -286,12 +292,12 @@ export default class VegtexComponent {
                 let selector = null, type = null
 
                 // No selector, just type
-                if(event_selector.trim().startsWith(':') || !event_selector.includes(':')) {
-                    type = event_selector.replace(':', '')
+                if(event_selector.trim().startsWith('@') || !event_selector.includes('@')) {
+                    type = event_selector.replace('@', '')
                 }
                 // With selector & type
                 else {
-                    [ selector, type ] = event_selector.split(':')
+                    [ selector, type ] = event_selector.split('@')
                     selector = selector.trim().replace(':host', '')
                 }
 

@@ -1,0 +1,55 @@
+//------------------------
+// TABS
+//------------------------
+vg-tabs, .vg-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    
+    .tabs {
+        display: flex;
+        flex-direction: row;
+        gap: 0.6rem;
+
+        button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            width: max-content;
+
+            padding: 16px;
+
+            background: transparent;
+            color: var(--color-3);
+
+            font-size: 16px;
+
+            outline: none;
+            border: none;
+
+            border-bottom: 3px solid transparent;
+            border-radius: 6px;
+
+            &.active {
+                color: var(--color-0);
+
+                border-bottom: 3px solid var(--color-accent);
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            &:hover {
+                background: var(--color-9);
+            }
+        }
+    }
+
+    .page {
+        > * {
+            text-align: center;
+            align-self: center;
+            justify-self: center;
+        }
+    }
+}

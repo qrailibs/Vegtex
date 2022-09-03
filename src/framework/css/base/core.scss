@@ -137,8 +137,13 @@ $transition: var(--transition);
 
     --shadow-accent: 0px 100px 80px rgb(105, 0, 255, 0.19), 0px 42px 34px rgba(105, 0, 255, 0.741675), 0px 22px 18px rgba(105, 0, 255, 0.626781), 0px 12.5px 10px rgba(105, 0, 255, 0.539948), 0px 7px 5px rgba(105, 0, 255, 0.460052), 0px 3px 2px rgba(105, 0, 255, 0.373219), 0px 5px 2px rgba(105, 0, 255, 0.258325);
 }
-.accent-toxicyellow {
-    --color-accent: #FFF736;
+.accent-yellow {
+    --color-accent: rgb(248, 243, 115);
+    --color-accent-hover: rgb(235, 231, 116);
+    --color-accent-semi: rgb(248, 243, 115, .4);
+
+    --color-accent-text: rgb(0, 0, 0);
+    --color-accent-muted: rgba(0, 0, 0, 0.65);
 }
 //------------------------
 // COMMON

@@ -55,10 +55,10 @@ export default new VegtexComponent(null, {
     template() {
         return /*html*/`
             <h2>Sizes</h2>
-            <variant-switcher :variants="${this.$(this.state.sizes)}"></variant-switcher>
+            <vg-tabs :variants="${this.$(this.state.sizes)}"></vg-tabs>
 
             <h2>Styles</h2>
-            <variant-switcher :variants="${this.$(this.state.styles)}"></variant-switcher>
+            <vg-tabs :variants="${this.$(this.state.styles)}"></vg-tabs>
 
             <h2>With Icon</h2>
             <button is="vg-button" size-md style-accent type-icon>

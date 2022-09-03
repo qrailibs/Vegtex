@@ -47,9 +47,7 @@ export default new VegtexComponent(null, {
                     <p card-text>Description</p>
                 </div>
                 <div card-footer>
-                    <vg-progress>
-                        <span style="width:60%"></span>
-                    </vg-progress>
+                    <vg-progress value="60"></vg-progress>
                 </div>
             </vg-card>
             <vg-card size-md>
