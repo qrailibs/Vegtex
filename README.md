@@ -27,35 +27,6 @@ new vegtex.VegtexComponent('my-counter', {
             <p>Clicked ${this.state.x} times</p>
         `
     },
-    style: (Style)  => ({
-        ':host': [
-            // Background & Text color
-            Style.BgColor.color10,
-            Style.TextColor.color0,
-            
-            // Content auto-flow
-            Style.AutoContent,
-            Style.Align.Center,
-            Style.Justify.Center,
-            
-            // Margin & Padding
-            Style.Margin.Top.px(25),
-            Style.Padding.All.px(25),
-            
-            // Cursor, text selection
-            Style.Cursor.Clickable,
-            Style.Selection.None,
-            
-            // Border rounding
-            Style.Rounding.Default,
-            
-            // Smooth transitions
-            Style.Transition.Smooth
-        ],
-        ':hover': [
-            Style.BgColor.color9,
-        ]
-    }),
     events: {
         click(e) {
             this.state.x++
@@ -66,6 +37,28 @@ new vegtex.VegtexComponent('my-counter', {
         x: 0
     }),
 })
+```
+```css
+my-counter {
+    background: var(--color-10);
+    color: var(--color-0);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+    margin: auto;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition: var(--transition);
+}
+my-counter:hover {
+    background: var(--color-9);
+}
+
 ```
 
 ## Example: SPA
